@@ -8,7 +8,16 @@ class GameControl {
         this.map = null;
     }
 
+    startGameLoop(context) {
+      const animate = () => {
+        context.clearRect(0, 0, this.width, this.height);
+      }
+      animate(0);
+    }
 
+    init() {
+      this.startGameLoop(this.ctx);
+    }
 
 
 
