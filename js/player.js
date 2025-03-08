@@ -1,7 +1,8 @@
 class Player {
   constructor(game) {
     this.game = game;
-    this.height = 91.3;
+    this.width = 200;
+    this.height = 200;
     this.gravity = 0.5;
     this.position = {
       x: 0,
@@ -30,7 +31,7 @@ class Player {
   }
 
   draw(context) {
-    context.fillRect(this.position.x, this.position.y, 100, 100);
+    context.fillRect(this.position.x, this.position.y, this.width, this.height);
     // context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y,
     // this.width, this.height);
   }

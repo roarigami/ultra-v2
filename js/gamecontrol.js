@@ -11,7 +11,7 @@ class GameControl {
         this.groundMargin = 0;
 
         this.player = new Player(this);
-
+        this.input = new InputHandler(this);
 
 
         this.gameOver = false;
