@@ -4,6 +4,8 @@ class Player {
     this.width = 160;
     this.height = 111;
     this.gravity = 0.5;
+    this.speed = 10;
+    this.maxSpeed = 20;
     this.position = {
       x: 0,
       y: 200//this.game.height - this.height
@@ -18,16 +20,17 @@ class Player {
     this.position.y += this.velocity.y;
     this.velocity.y += this.gravity;
 
-    if(input.includes('ArrowRight')) this.position.x++;
+    if(input.includes('ArrowRight')) this.position.x += this.speed;
 
-    else if(input.includes('ArrowLeft')) this.position.x--;
+    else if(input.includes('ArrowLeft')) this.position.x -= this.speed;
 
     //Horizontal Boundaries
     if(this.position.x < 0) this.position.x = 0;
     if(this.position.x > this.game.width - this.width) this.position.x = this.game.width - this.width;
 
     //vertical movement
-    // if(input.includes('ArrowUp') && this.onGround()) this.vy -= 25;
+    if(input.includes('ArrowUp') && this.onGround()) this.velocity.y -= 20;
+    this.position.y += this.velocity.y;
     if(!this.onGround()) this.velocity.y += this.gravity;
     else this.velocity.y = 0;
 
