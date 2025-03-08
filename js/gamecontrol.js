@@ -17,11 +17,19 @@ class GameControl {
         this.gameOver = false;
     }
 
+    update() {
+      this.player.update(this.input.keys);
+    }
+
+    draw(context) {
+      this.player.draw(context);//Needed -> draw method is no longer called within update method
+    }
+
     startGameLoop(context) {
       const animate = () => {
         context.clearRect(0, 0, this.width, this.height);
-        //this.player.draw(context);//No longer need -> draw method is called within update method
-        this.player.update(context);
+        this.draw(context);
+        this.update();
         if(!this.gameOver) requestAnimationFrame(animate);
       }
       animate(0);

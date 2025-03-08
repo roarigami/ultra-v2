@@ -1,8 +1,8 @@
 class Player {
   constructor(game) {
     this.game = game;
-    this.width = 200;
-    this.height = 200;
+    this.width = 160;
+    this.height = 111;
     this.gravity = 0.5;
     this.position = {
       x: 0,
@@ -14,10 +14,13 @@ class Player {
     }
   }
 
-  update(context) {
-    this.draw(context);
+  update(input) {
     this.position.y += this.velocity.y;
     this.velocity.y += this.gravity;
+
+    if(input.includes('ArrowRight')) this.position.x++;
+
+    else if(input.includes('ArrowLeft')) this.position.x--;
 
     //vertical movement
     // if(input.includes('ArrowUp') && this.onGround()) this.vy -= 25;
