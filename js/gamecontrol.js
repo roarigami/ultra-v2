@@ -25,9 +25,12 @@ class GameControl {
         this.gameOver = false;
     }
 
-    update() {
+    update(context) {
       this.player.update(this.input.keys);
-      this.background.update(this.ctx);
+      context.save();
+      context.scale(4, 4);
+      this.background.update(context);
+      context.restore();
     }
 
     draw(context) {
@@ -37,8 +40,8 @@ class GameControl {
     startGameLoop(context) {
       const animate = () => {
         context.clearRect(0, 0, this.width, this.height);
+        this.update(context);//Update method must be called before draw method
         this.draw(context);
-        this.update();
         if(!this.gameOver) requestAnimationFrame(animate);
       }
       animate(0);
