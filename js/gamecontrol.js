@@ -1,3 +1,4 @@
+
 class GameControl {
     constructor(config) {
         this.element = config.element;
@@ -7,14 +8,18 @@ class GameControl {
         this.ctx = this.canvas.getContext('2d', {willReadFrequently: true});
         this.map = null;
 
+        this.player = new Player(this);
         this.y = 100;
+
+
+        this.gameOver = false;
     }
 
     startGameLoop(context) {
       const animate = () => {
         context.clearRect(0, 0, this.width, this.height);
         context.fillRect(200, this.y, 100, 100);
-        requestAnimationFrame(animate);
+        if(!this.gameOver) requestAnimationFrame(animate);
         this.y++;
       }
       animate(0);
