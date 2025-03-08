@@ -4,6 +4,7 @@ class Player {
     this.width = 160;
     this.height = 111;
     this.gravity = 0.5;
+    this.speed = 10;
     this.position = {
       x: 0,
       y: 200//this.game.height - this.height
@@ -18,9 +19,9 @@ class Player {
     this.position.y += this.velocity.y;
     this.velocity.y += this.gravity;
 
-    if(input.includes('ArrowRight')) this.position.x++;
+    if(input.includes('ArrowRight')) this.position.x += this.speed;
 
-    else if(input.includes('ArrowLeft')) this.position.x--;
+    else if(input.includes('ArrowLeft')) this.position.x -= this.speed;
 
     //Horizontal Boundaries
     if(this.position.x < 0) this.position.x = 0;
