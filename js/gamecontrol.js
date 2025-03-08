@@ -12,6 +12,14 @@ class GameControl {
 
         this.player = new Player(this);
         this.input = new InputHandler(this);
+        //this.sprite = new Sprite();
+        this.background = new Sprite({
+          position: {
+            x: 0,
+            y: 0
+          },
+          imgsrc: './assets/img/background.png'
+        })
 
 
         this.gameOver = false;
@@ -19,6 +27,7 @@ class GameControl {
 
     update() {
       this.player.update(this.input.keys);
+      this.background.update(this.ctx);
     }
 
     draw(context) {
