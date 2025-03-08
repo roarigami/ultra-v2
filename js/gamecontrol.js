@@ -9,7 +9,7 @@ class GameControl {
         this.map = null;
 
         this.player = new Player(this);
-        this.y = 100;
+
 
 
         this.gameOver = false;
@@ -18,9 +18,8 @@ class GameControl {
     startGameLoop(context) {
       const animate = () => {
         context.clearRect(0, 0, this.width, this.height);
-        context.fillRect(200, this.y, 100, 100);
+        this.player.draw(context);
         if(!this.gameOver) requestAnimationFrame(animate);
-        this.y++;
       }
       animate(0);
     }
