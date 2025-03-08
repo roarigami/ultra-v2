@@ -22,6 +22,10 @@ class Player {
 
     else if(input.includes('ArrowLeft')) this.position.x--;
 
+    //Horizontal Boundaries
+    if(this.position.x < 0) this.position.x = 0;
+    if(this.position.x > this.game.width - this.width) this.position.x = this.game.width - this.width;
+
     //vertical movement
     // if(input.includes('ArrowUp') && this.onGround()) this.vy -= 25;
     if(!this.onGround()) this.velocity.y += this.gravity;
