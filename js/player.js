@@ -46,6 +46,7 @@ class Player {
   }
 
   draw(context) {
+    context.fillStyle = "red";
     context.fillRect(this.position.x, this.position.y, this.width, this.height);
     context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.position.x, this.position.y,
     this.width, this.height);
