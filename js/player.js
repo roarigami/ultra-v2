@@ -1,7 +1,8 @@
 class Player {
   constructor(game) {
     this.game = game;
-    this.height = 91.3;
+    this.width = 160;
+    this.height = 111;
     this.gravity = 0.5;
     this.position = {
       x: 0,
@@ -13,10 +14,17 @@ class Player {
     }
   }
 
-  update(context) {
-    this.draw(context);
+  update(input) {
     this.position.y += this.velocity.y;
     this.velocity.y += this.gravity;
+
+    if(input.includes('ArrowRight')) this.position.x++;
+
+    else if(input.includes('ArrowLeft')) this.position.x--;
+
+    //Horizontal Boundaries
+    if(this.position.x < 0) this.position.x = 0;
+    if(this.position.x > this.game.width - this.width) this.position.x = this.game.width - this.width;
 
     //vertical movement
     // if(input.includes('ArrowUp') && this.onGround()) this.vy -= 25;
@@ -30,7 +38,7 @@ class Player {
   }
 
   draw(context) {
-    context.fillRect(this.position.x, this.position.y, 100, 100);
+    context.fillRect(this.position.x, this.position.y, this.width, this.height);
     // context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y,
     // this.width, this.height);
   }
