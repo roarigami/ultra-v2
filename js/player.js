@@ -14,6 +14,11 @@ class Player {
       x: 0,
       y: 1
     }
+
+    this.image = Idle;
+    this.frameX = 0;
+    this.frameY = 0;
+
   }
 
   update(input) {
@@ -42,8 +47,8 @@ class Player {
 
   draw(context) {
     context.fillRect(this.position.x, this.position.y, this.width, this.height);
-    // context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y,
-    // this.width, this.height);
+    context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.position.x, this.position.y,
+    this.width, this.height);
   }
 
   onGround() {
