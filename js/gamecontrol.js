@@ -18,7 +18,8 @@ class GameControl {
     startGameLoop(context) {
       const animate = () => {
         context.clearRect(0, 0, this.width, this.height);
-        this.player.draw(context);
+        //this.player.draw(context);//No longer need -> draw method is called within update method
+        this.player.update(context);
         if(!this.gameOver) requestAnimationFrame(animate);
       }
       animate(0);
