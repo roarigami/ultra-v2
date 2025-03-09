@@ -1,4 +1,4 @@
-
+//console.log(floorCollisions);
 class GameControl {
     constructor(config) {
         this.element = config.element;
