@@ -1,9 +1,10 @@
-class Player {
-  constructor(game, collisionBlocks) {
+class Player extends Sprite {
+  constructor({game, collisionBlocks, imgsrc, frameRate}) {
+    super({imgsrc, frameRate});
     this.game = game;
     this.collisionBlocks = collisionBlocks;
-    this.width = 100 / 4;//Dividing by 4 to match the scale
-    this.height = 100 / 4;//Dividing by 4 to match the scale
+    //this.width = 100 / 4;//height and width set in Sprite class
+    //this.height = 100 / 4;//height and width set in Sprite class
 
     this.gravity = 2;
     this.speed = 2;
@@ -29,6 +30,9 @@ class Player {
   update(input, context) {
     //console.log(this.velocity.x);
     //console.log(this.velocity.y);
+    context.fillStyle = 'rgba(255, 0, 0, 1)';
+    context.strokeRect(this.position.x, this.position.y, this.width, this.height);
+
     this.position.x += this.velocity.x;
     this.draw(context);
     //console.log(this.velocity.x);
@@ -43,17 +47,17 @@ class Player {
     if(input.includes('ArrowUp')) this.velocity.y -= this.bounce;
 
     //Horizontal Boundaries
-    if(this.position.x < 0) this.position.x = 0;
-    if(this.position.x > this.game.width - this.width) this.position.x = this.game.width - this.width;
+    // if(this.position.x < 0) this.position.x = 0;
+    // if(this.position.x > this.game.width - this.width) this.position.x = this.game.width - this.width;
 
   }
 
-  draw(context) {
-    context.fillStyle = "red";
-    context.fillRect(this.position.x, this.position.y, this.width, this.height);
-    // context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.position.x, this.position.y,
-    // this.width, this.height);
-  }
+  // draw(context) {
+  //   context.fillStyle = "red";
+  //   context.fillRect(this.position.x, this.position.y, this.width, this.height);
+  //   // context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.position.x, this.position.y,
+  //   // this.width, this.height);
+  // }
 
   applyGravity() {
     this.position.y += this.velocity.y;

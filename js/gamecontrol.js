@@ -12,7 +12,6 @@ class GameControl {
           height: this.height / 4
         }
 
-
         //Floor
         this.floorCollisions2D = [];
         for(let i = 0; i < floorCollisions.length; i += 36) {
@@ -53,20 +52,23 @@ class GameControl {
             });
         });
 
-        //console.log(this.floorCollisions2D);
-        //console.log(this.collisionBlocks);
-
         //this.groundMargin = 0;
-
-        this.player = new Player(this, this.collisionBlocks);
         this.input = new InputHandler(this);
         //this.sprite = new Sprite();
+
+        this.player = new Player({
+          game: this,
+          collisionBlocks: this.collisionBlocks,
+          imgsrc: './assets/img/Idle.png',
+          frameRate :8
+        });
         this.background = new Sprite({
           position: {
             x: 0,
             y: 0
           },
-          imgsrc: './assets/img/background.png'
+          imgsrc: './assets/img/background.png',
+          frameRate: 1
         })
 
 
