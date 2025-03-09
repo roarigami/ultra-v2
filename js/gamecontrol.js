@@ -11,20 +11,50 @@ class GameControl {
           width: this.width / 4,
           height: this.height / 4
         }
+
+
+        //Floor
         this.floorCollisions2D = [];
         for(let i = 0; i < floorCollisions.length; i += 36) {
           this.floorCollisions2D.push(floorCollisions.slice(i, i + 36));
         }
-        this.floorCollisions2D.forEach((row, i) => {
-            row.forEach((symbol, i) => {
+
+        this.collisionBlocks = [];
+        this.floorCollisions2D.forEach((row, yi) => {
+            row.forEach((symbol, xi) => {
               if(symbol == 202) {
-                
+                this.collisionBlocks.push(new CollisionBlock({position: {
+                      x: xi * 16,
+                      y: yi * 16
+                    },
+                  })
+                )
               }
             });
+        });
 
+        //Platforms
+        this.platformCollisions2D = [];
+        for(let i = 0; i < platformCollisions.length; i += 36) {
+          this.platformCollisions2D.push(platformCollisions.slice(i, i + 36));
+        }
+
+        this.platformCollisionBlocks = [];
+        this.platformCollisions2D.forEach((row, yi) => {
+            row.forEach((symbol, xi) => {
+              if(symbol == 202) {
+                this.platformCollisionBlocks.push(new CollisionBlock({position: {
+                      x: xi * 16,
+                      y: yi * 16
+                    },
+                  })
+                )
+              }
+            });
         });
 
         //console.log(this.floorCollisions2D);
+        console.log(this.collisionBlocks);
 
         this.groundMargin = 0;
 
@@ -49,7 +79,18 @@ class GameControl {
       context.scale(4, 4);
       context.translate(0, -this.background.image.height + this.scaledCanvas.height);
       this.background.update(context);
+      //this property must be between save and restore
+      //to scale the collision blocks to the proper coordinates
+      this.collisionBlocks.forEach((collBlock) => {
+          collBlock.draw(context);
+      });
+      this.platformCollisionBlocks.forEach((platCollBlock) => {
+          platCollBlock.draw(context);
+      });
       context.restore();
+
+
+
     }
 
     draw(context) {

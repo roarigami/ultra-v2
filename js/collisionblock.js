@@ -1,5 +1,5 @@
 
-class ColisionBlock {
+class CollisionBlock {
   constructor({position}) {
       this.position = position;
       this.width = 16;
