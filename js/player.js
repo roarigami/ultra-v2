@@ -1,6 +1,6 @@
 class Player extends Sprite {
-  constructor({game, collisionBlocks, imgsrc, frameRate}) {
-    super({imgsrc, frameRate});
+  constructor({game, collisionBlocks, imgsrc, frameRate, scale = 0.5}) {
+    super({imgsrc, frameRate, scale});
     this.game = game;
     this.collisionBlocks = collisionBlocks;
     //this.width = 100 / 4;//height and width set in Sprite class
@@ -28,6 +28,7 @@ class Player extends Sprite {
   }
 
   update(input, context) {
+    this.updateFrames();
     //console.log(this.velocity.x);
     //console.log(this.velocity.y);
     context.fillStyle = 'rgba(255, 0, 0, 1)';
