@@ -11,6 +11,20 @@ class GameControl {
           width: this.width / 4,
           height: this.height / 4
         }
+        this.floorCollisions2D = [];
+        for(let i = 0; i < floorCollisions.length; i += 36) {
+          this.floorCollisions2D.push(floorCollisions.slice(i, i + 36));
+        }
+        this.floorCollisions2D.forEach((row, i) => {
+            row.forEach((symbol, i) => {
+              if(symbol == 202) {
+                
+              }
+            });
+
+        });
+
+        //console.log(this.floorCollisions2D);
 
         this.groundMargin = 0;
 
