@@ -54,11 +54,11 @@ class GameControl {
         });
 
         //console.log(this.floorCollisions2D);
-        console.log(this.collisionBlocks);
+        //console.log(this.collisionBlocks);
 
         this.groundMargin = 0;
 
-        this.player = new Player(this);
+        this.player = new Player(this, this.collisionBlocks);
         this.input = new InputHandler(this);
         //this.sprite = new Sprite();
         this.background = new Sprite({
@@ -74,7 +74,6 @@ class GameControl {
     }
 
     update(context) {
-      this.player.update(this.input.keys);
       context.save();
       context.scale(4, 4);
       context.translate(0, -this.background.image.height + this.scaledCanvas.height);
@@ -87,6 +86,7 @@ class GameControl {
       this.platformCollisionBlocks.forEach((platCollBlock) => {
           platCollBlock.draw(context);
       });
+      this.player.update(this.input.keys, context);
       context.restore();
 
 
@@ -94,7 +94,7 @@ class GameControl {
     }
 
     draw(context) {
-      this.player.draw(context);//Needed -> draw method is no longer called within update method
+      //this.player.draw(context);//No longer Needed -> draw method is called within update method //Tight coupling--bad design
     }
 
     startGameLoop(context) {

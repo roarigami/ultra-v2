@@ -1,13 +1,14 @@
 class Player {
-  constructor(game) {
+  constructor(game, collisionBlocks) {
     this.game = game;
-    this.width = 160;
-    this.height = 111;
+    this.collisionBlocks = collisionBlocks;
+    this.width = 25;
+    this.height = 25;
     this.gravity = 0.5;
-    this.speed = 10;
+    this.speed = 2;
     this.maxSpeed = 20;
     this.position = {
-      x: 0,
+      x: 100,
       y: 200//this.game.height - this.height
     }
     this.velocity = {
@@ -21,9 +22,10 @@ class Player {
 
   }
 
-  update(input) {
-    this.position.y += this.velocity.y;
-    this.velocity.y += this.gravity;
+  update(input, context) {
+    this.draw(context);
+    this.applyGravity();
+    this.checkVerticalCollision();
 
     if(input.includes('ArrowRight')) this.position.x += this.speed;
 
@@ -34,26 +36,52 @@ class Player {
     if(this.position.x > this.game.width - this.width) this.position.x = this.game.width - this.width;
 
     //vertical movement
-    if(input.includes('ArrowUp') && this.onGround()) this.velocity.y -= 20;
-    this.position.y += this.velocity.y;
-    if(!this.onGround()) this.velocity.y += this.gravity;
-    else this.velocity.y = 0;
-
+    // if(input.includes('ArrowUp') && this.onGround()) this.velocity.y -= 20;
+    // this.position.y += this.velocity.y;
+    // if(!this.onGround()) this.velocity.y += this.gravity;
+    // else this.velocity.y = 0;
+    if(input.includes('ArrowUp')) this.velocity.y -= 5;
+    // if(!this.checkVerticalCollision()) this.velocity.y += this.gravity;
+    // else this.velocity.y = 0;
     //Vertical Boundaries
-    if(this.position.y > this.game.height - this.height - this.game.groundMargin) {
-        this.position.y = this.game.height - this.height - this.game.groundMargin;
-    }
+    // if(this.position.y > this.game.height - this.height - this.game.groundMargin) {
+    //     this.position.y = this.game.height - this.height - this.game.groundMargin;
+    // }
   }
 
   draw(context) {
     context.fillStyle = "red";
     context.fillRect(this.position.x, this.position.y, this.width, this.height);
-    context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.position.x, this.position.y,
-    this.width, this.height);
+    // context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.position.x, this.position.y,
+    // this.width, this.height);
   }
 
+  applyGravity() {
+    this.position.y += this.velocity.y;
+    this.velocity.y += this.gravity;
+  }
   onGround() {
       return this.position.y >= this.game.height - this.height - this.game.groundMargin;
+  }
+
+  checkVerticalCollision() {
+      for(let i = 0; i < this.collisionBlocks.length; i++) {
+          const collisionBlock = this.collisionBlocks[i];
+
+          if(xyCollision({
+                object1: this,
+                object2: collisionBlock
+              })
+            ) {
+            // console.log("colliding with ground or wall");
+                if(this.velocity.y > 0) {
+                  this.velocity.y = 0;
+                }
+          }
+      }
+  }
+  checkEnemyCollision() {
+
   }
 
 }
