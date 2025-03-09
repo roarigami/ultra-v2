@@ -12,9 +12,53 @@ class GameControl {
           height: this.height / 4
         }
 
+
+        //Floor
+        this.floorCollisions2D = [];
+        for(let i = 0; i < floorCollisions.length; i += 36) {
+          this.floorCollisions2D.push(floorCollisions.slice(i, i + 36));
+        }
+
+        this.collisionBlocks = [];
+        this.floorCollisions2D.forEach((row, yi) => {
+            row.forEach((symbol, xi) => {
+              if(symbol == 202) {
+                this.collisionBlocks.push(new CollisionBlock({position: {
+                      x: xi * 16,
+                      y: yi * 16
+                    },
+                  })
+                )
+              }
+            });
+        });
+
+        //Platforms
+        this.platformCollisions2D = [];
+        for(let i = 0; i < platformCollisions.length; i += 36) {
+          this.platformCollisions2D.push(platformCollisions.slice(i, i + 36));
+        }
+
+        this.platformCollisionBlocks = [];
+        this.platformCollisions2D.forEach((row, yi) => {
+            row.forEach((symbol, xi) => {
+              if(symbol == 202) {
+                this.platformCollisionBlocks.push(new CollisionBlock({position: {
+                      x: xi * 16,
+                      y: yi * 16
+                    },
+                  })
+                )
+              }
+            });
+        });
+
+        //console.log(this.floorCollisions2D);
+        //console.log(this.collisionBlocks);
+
         this.groundMargin = 0;
 
-        this.player = new Player(this);
+        this.player = new Player(this, this.collisionBlocks);
         this.input = new InputHandler(this);
         //this.sprite = new Sprite();
         this.background = new Sprite({
@@ -30,16 +74,27 @@ class GameControl {
     }
 
     update(context) {
-      this.player.update(this.input.keys);
       context.save();
       context.scale(4, 4);
       context.translate(0, -this.background.image.height + this.scaledCanvas.height);
       this.background.update(context);
+      //this property must be between save and restore
+      //to scale the collision blocks to the proper coordinates
+      this.collisionBlocks.forEach((collBlock) => {
+          collBlock.draw(context);
+      });
+      this.platformCollisionBlocks.forEach((platCollBlock) => {
+          platCollBlock.draw(context);
+      });
+      this.player.update(this.input.keys, context);
       context.restore();
+
+
+
     }
 
     draw(context) {
-      this.player.draw(context);//Needed -> draw method is no longer called within update method
+      //this.player.draw(context);//No longer Needed -> draw method is called within update method //Tight coupling--bad design
     }
 
     startGameLoop(context) {
