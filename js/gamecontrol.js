@@ -7,6 +7,10 @@ class GameControl {
         this.width = canvasUV2.width;
         this.ctx = this.canvas.getContext('2d', {willReadFrequently: true});
         this.map = null;
+        this.scaledCanvas = {
+          width: this.width / 4,
+          height: this.height / 4
+        }
 
         this.groundMargin = 0;
 
@@ -29,6 +33,7 @@ class GameControl {
       this.player.update(this.input.keys);
       context.save();
       context.scale(4, 4);
+      context.translate(0, -this.background.image.height + this.scaledCanvas.height);
       this.background.update(context);
       context.restore();
     }
