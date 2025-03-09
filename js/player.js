@@ -2,11 +2,15 @@ class Player {
   constructor(game, collisionBlocks) {
     this.game = game;
     this.collisionBlocks = collisionBlocks;
-    this.width = 25;
-    this.height = 25;
-    this.gravity = 0.5;
+    this.width = 100 / 4;//Dividing by 4 to match the scale
+    this.height = 100 / 4;//Dividing by 4 to match the scale
+
+    this.gravity = 2;
     this.speed = 2;
     this.maxSpeed = 20;
+    this.bounce = 3;
+    this.maxBounce = 10;
+
     this.position = {
       x: 100,
       y: 200//this.game.height - this.height
@@ -23,30 +27,25 @@ class Player {
   }
 
   update(input, context) {
+    //console.log(this.velocity.x);
+    //console.log(this.velocity.y);
+    this.position.x += this.velocity.x;
     this.draw(context);
+    //console.log(this.velocity.x);
+    this.checkHorizontalCollision();
     this.applyGravity();
     this.checkVerticalCollision();
 
-    if(input.includes('ArrowRight')) this.position.x += this.speed;
-
-    else if(input.includes('ArrowLeft')) this.position.x -= this.speed;
+    //Inputs
+    if(input.includes('ArrowRight')) this.velocity.x = this.speed;
+    else if(input.includes('ArrowLeft')) this.velocity.x = -this.speed;
+      else this.velocity.x = 0;
+    if(input.includes('ArrowUp')) this.velocity.y -= this.bounce;
 
     //Horizontal Boundaries
     if(this.position.x < 0) this.position.x = 0;
     if(this.position.x > this.game.width - this.width) this.position.x = this.game.width - this.width;
 
-    //vertical movement
-    // if(input.includes('ArrowUp') && this.onGround()) this.velocity.y -= 20;
-    // this.position.y += this.velocity.y;
-    // if(!this.onGround()) this.velocity.y += this.gravity;
-    // else this.velocity.y = 0;
-    if(input.includes('ArrowUp')) this.velocity.y -= 5;
-    // if(!this.checkVerticalCollision()) this.velocity.y += this.gravity;
-    // else this.velocity.y = 0;
-    //Vertical Boundaries
-    // if(this.position.y > this.game.height - this.height - this.game.groundMargin) {
-    //     this.position.y = this.game.height - this.height - this.game.groundMargin;
-    // }
   }
 
   draw(context) {
@@ -64,6 +63,32 @@ class Player {
       return this.position.y >= this.game.height - this.height - this.game.groundMargin;
   }
 
+  checkHorizontalCollision() {
+      for(let i = 0; i < this.collisionBlocks.length; i++) {
+          const collisionBlock = this.collisionBlocks[i];
+
+          if(xyCollision({
+                object1: this,
+                object2: collisionBlock
+              })
+            ) {
+              //console.log("colliding with wall");
+                if(this.velocity.x > 0) {
+                    this.velocity.x = 0;
+                    //this.speed = 0;
+                    this.position.x = collisionBlock.position.x - this.width - 0.01;
+                    break;
+                }
+                if(this.velocity.x < 0) {
+                    this.velocity.x = 0;
+                    //this.speed = 0;
+                    this.position.x = collisionBlock.position.x + collisionBlock.width + 0.01;
+                    break;
+                }
+          }
+      }
+  }
+
   checkVerticalCollision() {
       for(let i = 0; i < this.collisionBlocks.length; i++) {
           const collisionBlock = this.collisionBlocks[i];
@@ -73,13 +98,23 @@ class Player {
                 object2: collisionBlock
               })
             ) {
-            // console.log("colliding with ground or wall");
+            //console.log("colliding with ground");
+            //Cannot go through ground
                 if(this.velocity.y > 0) {
-                  this.velocity.y = 0;
+                    this.velocity.y = 0;
+                    this.position.y = collisionBlock.position.y - this.height - 0.01;
+                    break;
+                }
+                //Cannot go through ceiling
+                if(this.velocity.y < 0) {
+                    this.velocity.y = 0;
+                    this.position.y = collisionBlock.position.y + collisionBlock.height + 0.01;
+                    break;
                 }
           }
       }
   }
+
   checkEnemyCollision() {
 
   }

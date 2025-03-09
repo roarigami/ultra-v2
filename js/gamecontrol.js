@@ -56,7 +56,7 @@ class GameControl {
         //console.log(this.floorCollisions2D);
         //console.log(this.collisionBlocks);
 
-        this.groundMargin = 0;
+        //this.groundMargin = 0;
 
         this.player = new Player(this, this.collisionBlocks);
         this.input = new InputHandler(this);
