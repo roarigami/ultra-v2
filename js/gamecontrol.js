@@ -148,6 +148,7 @@ class GameControl {
       this.platformCollisionBlocks.forEach((platCollBlock) => {
           platCollBlock.draw(context);
       });
+      this.player.checkHorizontalCanvasHitboxCollision();
       this.player.update(this.input.keys, context);
       context.restore();
 

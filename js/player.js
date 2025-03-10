@@ -76,6 +76,12 @@ class Player extends Sprite {
 
   }
 
+  checkHorizontalCanvasHitboxCollision() {
+    if(this.hitbox.position.x + this.hitbox.width + this.velocity.x >= 576) {
+      this.velocity.x = 0;
+    }
+  }
+
   switchSprite(key) {
     //console.log(key)
     if(this.image === this.animations[key].image || !this.loaded) return;
@@ -122,19 +128,25 @@ class Player extends Sprite {
 
     //Inputs
     if(input.includes('ArrowRight')) {
+
       this.switchSprite('Run');
       this.velocity.x = this.speed;
       this.lastDirection = 'right';
       this.panCameraLeft();
+
     } else if(input.includes('ArrowLeft')) {
+
       this.switchSprite('RunLeft');
         this.velocity.x = -this.speed;
         this.lastDirection = 'left';
         this.panCameraRight();
+
     } else if(this.velocity.y === 0) {
+
       if(this.lastDirection === 'right') this.switchSprite('Idle');
       else if(this.lastDirection === 'left') this.switchSprite('IdleLeft');
       this.velocity.x = 0;
+
     }
 
     if(input.includes('ArrowUp')) {
