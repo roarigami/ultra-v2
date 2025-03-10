@@ -8,10 +8,10 @@ class Player extends Sprite {
     this.cameraPos = cameraPos;
     //this.width = 100 / 4;//height and width set in Sprite class
     //this.height = 100 / 4;//height and width set in Sprite class
-    this.gravity = 1;
+    this.gravity = 0.2;
     this.speed = 2;
     this.maxSpeed = 10;
-    this.bounce = 3;
+    this.bounce = 1;
     this.maxBounce = 10;
 
     this.lastDirection = 'right';
@@ -24,8 +24,8 @@ class Player extends Sprite {
     }
 
     this.position = {
-      x: 100,
-      y: 200//this.game.height - this.height
+      x: -10,
+      y: 300//this.game.height - this.height
     }
     this.velocity = {
       x: 0,
@@ -76,6 +76,31 @@ class Player extends Sprite {
 
   }
 
+  panCameraDown() {
+    //const cameraboxTopEdge = this.camerabox.position.y;
+    if(this.camerabox.position.y + this.velocity.y <= 0) return
+
+    if(this.camerabox.position.y <= Math.abs(camera.position.y)) {
+      camera.position.y -= this.velocity.y;
+    }
+  }
+
+  panCameraUp() {
+    //const cameraboxTopEdge = this.camerabox.position.y;
+    if(this.camerabox.position.y + this.camerabox.height + this.velocity.y >= backgroundImageHeight) return
+
+    if(this.camerabox.position.y + this.camerabox.height >= Math.abs(camera.position.y) + scaledCanvas.height) {
+      camera.position.y -= this.velocity.y;
+    }
+  }
+
+  checkHorizontalCanvasHitboxCollision() {
+    if(this.hitbox.position.x + this.hitbox.width + this.velocity.x >= 576 ||
+       this.hitbox.position.x + this.velocity.x <= 0) {
+      this.velocity.x = 0;
+    }
+  }
+
   switchSprite(key) {
     //console.log(key)
     if(this.image === this.animations[key].image || !this.loaded) return;
@@ -122,23 +147,30 @@ class Player extends Sprite {
 
     //Inputs
     if(input.includes('ArrowRight')) {
+
       this.switchSprite('Run');
       this.velocity.x = this.speed;
       this.lastDirection = 'right';
       this.panCameraLeft();
+
     } else if(input.includes('ArrowLeft')) {
+
       this.switchSprite('RunLeft');
         this.velocity.x = -this.speed;
         this.lastDirection = 'left';
         this.panCameraRight();
+
     } else if(this.velocity.y === 0) {
+
       if(this.lastDirection === 'right') this.switchSprite('Idle');
       else if(this.lastDirection === 'left') this.switchSprite('IdleLeft');
       this.velocity.x = 0;
+
     }
 
     if(input.includes('ArrowUp')) {
       this.velocity.y -= this.bounce;
+      this.panCameraDown();
     }
     if(input.includes('s')) {
         //this.speed = this.maxSpeed;
@@ -147,12 +179,14 @@ class Player extends Sprite {
         this.switchSprite('Attack1');
     }
     if(this.velocity.y < 0) {
+      this.panCameraDown();
       if(this.lastDirection === 'right') this.switchSprite('Jump');
       else if(this.lastDirection === 'left') this.switchSprite('JumpLeft');
     }
     else if(this.velocity.y > 0) {
       if(this.lastDirection === 'right') this.switchSprite('Fall');
       else if(this.lastDirection === 'left') this.switchSprite('FallLeft');
+      this.panCameraUp();
     }
 
     //Horizontal Boundaries
