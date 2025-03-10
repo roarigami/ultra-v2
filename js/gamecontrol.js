@@ -7,6 +7,8 @@ class GameControl {
         this.width = canvasUV2.width;
         this.ctx = this.canvas.getContext('2d', {willReadFrequently: true});
         this.map = null;
+        this.debug = true;
+
         this.scaledCanvas = {
           width: this.width / 4,
           height: this.height / 4
@@ -59,8 +61,56 @@ class GameControl {
         this.player = new Player({
           game: this,
           collisionBlocks: this.collisionBlocks,
+          platformCollisionBlocks: this.platformCollisionBlocks,
           imgsrc: './assets/img/Idle.png',
-          frameRate :8
+          frameRate :8,
+          animations: {
+            Idle: {
+              imgsrc: './assets/img/Idle.png',
+              frameRate :8,
+              frameBuffer: 3
+            },
+            IdleLeft: {
+              imgsrc: './assets/img/IdleLeft.png',
+              frameRate :8,
+              frameBuffer: 3
+            },
+            Run: {
+              imgsrc: './assets/img/Run.png',
+              frameRate :8,
+              frameBuffer: 3
+            },
+            RunLeft: {
+              imgsrc: './assets/img/RunLeft.png',
+              frameRate :8,
+              frameBuffer: 3
+            },
+            Jump: {
+              imgsrc: './assets/img/Jump.png',
+              frameRate :2,
+              frameBuffer: 3
+            },
+            JumpLeft: {
+              imgsrc: './assets/img/JumpLeft.png',
+              frameRate :2,
+              frameBuffer: 3
+            },
+            Fall: {
+              imgsrc: './assets/img/Fall.png',
+              frameRate :2,
+              frameBuffer: 3
+            },
+            FallLeft: {
+              imgsrc: './assets/img/FallLeft.png',
+              frameRate :2,
+              frameBuffer: 3
+            },
+            Attack1: {
+              imgsrc: './assets/img/Attack1.png',
+              frameRate :2,
+              frameBuffer: 7
+            },
+          }
         });
         this.background = new Sprite({
           position: {
