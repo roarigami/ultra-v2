@@ -7,6 +7,8 @@ class GameControl {
         this.width = canvasUV2.width;
         this.ctx = this.canvas.getContext('2d', {willReadFrequently: true});
         this.map = null;
+        this.debug = true;
+
         this.scaledCanvas = {
           width: this.width / 4,
           height: this.height / 4
