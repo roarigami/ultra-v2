@@ -11,6 +11,7 @@ class Player extends Sprite {
     this.bounce = 3;
     this.maxBounce = 10;
 
+    this.lastDirection = 'right';
     this.animations = animations;
     for(let key in this.animations) {
         const image = new Image();
@@ -45,8 +46,10 @@ class Player extends Sprite {
 
   switchSprite(key) {
     //console.log(key)
-    if(this.image === this.animations[key].image) return;
+    if(this.image === this.animations[key].image || !this.loaded) return;
       this.image = this.animations[key].image;
+      this.frameBuffer = this.animations[key].frameBuffer;
+      this.frameRate = this.animations[key].frameRate;
   }
 
   update(input, context) {
@@ -74,13 +77,35 @@ class Player extends Sprite {
 
     //Inputs
     if(input.includes('ArrowRight')) {
-      this.velocity.x = this.speed;
       this.switchSprite('Run');
+      this.velocity.x = this.speed;
+      this.lastDirection = 'right';
     } else if(input.includes('ArrowLeft')) {
+      this.switchSprite('RunLeft');
         this.velocity.x = -this.speed;
-    } else this.velocity.x = 0;
+        this.lastDirection = 'left';
+    } else if(this.velocity.y === 0) {
+      this.switchSprite('Idle');
+      this.velocity.x = 0;
+    }
 
-    if(input.includes('ArrowUp')) this.velocity.y -= this.bounce;
+    if(input.includes('ArrowUp')) {
+      this.velocity.y -= this.bounce;
+    }
+    if(input.includes('s')) {
+        this.switchSprite('Attack1');
+    }
+    if(this.velocity.y < 0) {
+      if(this.lastDirection === 'right') this.switchSprite('Jump');
+      if(this.lastDirection === 'left') this.switchSprite('JumpLeft');
+    }
+    else if(this.velocity.y > 0) {
+      if(this.lastDirection === 'right') this.switchSprite('Fall');
+      else if(this.lastDirection === 'left') this.switchSprite('FallLeft');
+    }
+    // this.position.y += this.velocity.y;
+    // if(!this.onGround()) this.velocity.y += this.gravity;
+    // else this.velocity.y = 0;
 
     //Horizontal Boundaries
     // const offsetLeft = this.hitbox.position.x - this.position.x;
@@ -108,11 +133,11 @@ class Player extends Sprite {
   // }
 
   applyGravity() {
+    this.velocity.y += this.gravity;//This must be first
     this.position.y += this.velocity.y;
-    this.velocity.y += this.gravity;
   }
   onGround() {
-      return this.position.y >= this.game.height - this.height - this.game.groundMargin;
+      return this.velocity.y = 0;
   }
 
   checkHorizontalCollision() {
