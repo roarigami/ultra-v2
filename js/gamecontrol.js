@@ -61,6 +61,7 @@ class GameControl {
         this.player = new Player({
           game: this,
           collisionBlocks: this.collisionBlocks,
+          platformCollisionBlocks: this.platformCollisionBlocks,
           imgsrc: './assets/img/Idle.png',
           frameRate :8,
           animations: {

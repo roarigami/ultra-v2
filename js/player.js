@@ -1,8 +1,9 @@
 class Player extends Sprite {
-  constructor({game, collisionBlocks, imgsrc, frameRate, scale = 0.5, animations}) {
+  constructor({game, collisionBlocks, platformCollisionBlocks, imgsrc, frameRate, scale = 0.5, animations}) {
     super({imgsrc, frameRate, scale});
     this.game = game;
     this.collisionBlocks = collisionBlocks;
+    this.platformCollisionBlocks = platformCollisionBlocks;
     //this.width = 100 / 4;//height and width set in Sprite class
     //this.height = 100 / 4;//height and width set in Sprite class
     this.gravity = 2;
@@ -47,9 +48,11 @@ class Player extends Sprite {
   switchSprite(key) {
     //console.log(key)
     if(this.image === this.animations[key].image || !this.loaded) return;
-      this.image = this.animations[key].image;
-      this.frameBuffer = this.animations[key].frameBuffer;
-      this.frameRate = this.animations[key].frameRate;
+
+    this.currentFrame = 0;
+    this.image = this.animations[key].image;
+    this.frameBuffer = this.animations[key].frameBuffer;
+    this.frameRate = this.animations[key].frameRate;
   }
 
   update(input, context) {
@@ -71,7 +74,11 @@ class Player extends Sprite {
     this.draw(context);
 
     this.checkHorizontalCollision();
+
+    //if(!this.onGround()) this.applyGravity();
+    //else this.velocity.y = 0;
     this.applyGravity();
+
     this.updateHitbox();//Hitbox must be right here //bad design
     this.checkVerticalCollision();
 
@@ -85,7 +92,8 @@ class Player extends Sprite {
         this.velocity.x = -this.speed;
         this.lastDirection = 'left';
     } else if(this.velocity.y === 0) {
-      this.switchSprite('Idle');
+      if(this.lastDirection === 'right') this.switchSprite('Idle');
+      else if(this.lastDirection === 'left') this.switchSprite('IdleLeft');
       this.velocity.x = 0;
     }
 
@@ -97,15 +105,12 @@ class Player extends Sprite {
     }
     if(this.velocity.y < 0) {
       if(this.lastDirection === 'right') this.switchSprite('Jump');
-      if(this.lastDirection === 'left') this.switchSprite('JumpLeft');
+      else if(this.lastDirection === 'left') this.switchSprite('JumpLeft');
     }
     else if(this.velocity.y > 0) {
       if(this.lastDirection === 'right') this.switchSprite('Fall');
       else if(this.lastDirection === 'left') this.switchSprite('FallLeft');
     }
-    // this.position.y += this.velocity.y;
-    // if(!this.onGround()) this.velocity.y += this.gravity;
-    // else this.velocity.y = 0;
 
     //Horizontal Boundaries
     // const offsetLeft = this.hitbox.position.x - this.position.x;
@@ -137,7 +142,7 @@ class Player extends Sprite {
     this.position.y += this.velocity.y;
   }
   onGround() {
-      return this.velocity.y = 0;
+      return this.velocity.y == 0;
   }
 
   checkHorizontalCollision() {
@@ -197,11 +202,47 @@ class Player extends Sprite {
                     this.velocity.y = 0;
                     const offset = this.hitbox.position.y - this.position.y;
 
-                    this.position.y = collisionBlock.position.y - offset + 0.01;
+                    this.position.y = collisionBlock.position.y + collisionBlock.height - offset + 0.01;
                     break;
                 }
           }
       }
+
+      //Platform Collisions
+      for(let i = 0; i < this.platformCollisionBlocks.length; i++) {
+          const platformCollisionBlock = this.platformCollisionBlocks[i];
+
+          if(xyCollision({
+                object1: this.hitbox,
+                object2: platformCollisionBlock
+              })
+            ) {
+            //console.log("colliding with platform");
+            //Cannot go through platform floor
+                if(this.velocity.y > 0) {
+
+                    this.velocity.y = 0;
+                    const offset = this.hitbox.position.y - this.position.y + this.hitbox.height;
+
+                    //this.position.y = platformCollisionBlock.position.y - offset - 0.01;
+                    break;
+                }
+
+                //Can/Cannot go through platform bottom
+                if(this.velocity.y < 0) {
+
+                    this.velocity.y = 0;
+                    const offset = this.hitbox.position.y - this.position.y;
+
+                    this.position.y = platformCollisionBlock.position.y + platformCollisionBlock.height - offset + 0.01;
+                    break;
+                }
+          }
+      }
+
+
+
+
   }
 
   checkEnemyCollision() {
