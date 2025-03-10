@@ -48,6 +48,7 @@ class GameControl {
                       x: xi * 16,
                       y: yi * 16
                     },
+                    blockHeight: 4
                   })
                 )
               }
@@ -107,10 +108,11 @@ class GameControl {
             },
             Attack1: {
               imgsrc: './assets/img/Attack1.png',
-              frameRate :2,
-              frameBuffer: 7
+              frameRate :4,
+              frameBuffer: 10
             },
-          }
+          },
+          cameraPos: this.camera
         });
         this.background = new Sprite({
           position: {
@@ -121,6 +123,14 @@ class GameControl {
           frameRate: 1
         })
 
+        //Made camera global for now
+        // this.camera = {
+        //   position: {
+        //     x: 0,
+        //     y: 0
+        //   }
+        // }
+
 
         this.gameOver = false;
     }
@@ -128,7 +138,7 @@ class GameControl {
     update(context) {
       context.save();
       context.scale(4, 4);
-      context.translate(0, -this.background.image.height + this.scaledCanvas.height);
+      context.translate(camera.position.x, -this.background.image.height + this.scaledCanvas.height);
       this.background.update(context);
       //this property must be between save and restore
       //to scale the collision blocks to the proper coordinates

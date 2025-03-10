@@ -1,14 +1,16 @@
+
 class Player extends Sprite {
-  constructor({game, collisionBlocks, platformCollisionBlocks, imgsrc, frameRate, scale = 0.5, animations}) {
+  constructor({game, collisionBlocks, platformCollisionBlocks, imgsrc, frameRate, scale = 0.5, animations, cameraPos}) {
     super({imgsrc, frameRate, scale});
     this.game = game;
     this.collisionBlocks = collisionBlocks;
     this.platformCollisionBlocks = platformCollisionBlocks;
+    this.cameraPos = cameraPos;
     //this.width = 100 / 4;//height and width set in Sprite class
     //this.height = 100 / 4;//height and width set in Sprite class
-    this.gravity = 2;
+    this.gravity = 1;
     this.speed = 2;
-    this.maxSpeed = 20;
+    this.maxSpeed = 10;
     this.bounce = 3;
     this.maxBounce = 10;
 
@@ -27,7 +29,7 @@ class Player extends Sprite {
     }
     this.velocity = {
       x: 0,
-      y: 1
+      y: 0
     }
 
     this.hitbox = {
@@ -39,9 +41,38 @@ class Player extends Sprite {
           height: 28
     }
 
+    this.camerabox = {
+        position: {
+          x: this.position.x - 50,
+          y: this.position.y
+        },
+        width: 200,
+        height: 80
+    }
+
     this.image = Idle;
     this.frameX = 0;
     this.frameY = 0;
+
+  }
+
+  panCameraLeft() {
+    const cameraboxRightEdge = this.camerabox.position.x + this.camerabox.width;
+    const canvasWidthScaled = canvasUV2.width / 4;
+
+    if(cameraboxRightEdge >= 576) return
+    if(cameraboxRightEdge >= canvasWidthScaled + Math.abs(camera.position.x)) {
+      //console.log(this.cameraPos);
+      camera.position.x -= this.velocity.x;
+    }
+  }
+
+  panCameraRight() {
+    const cameraboxLeftEdge = this.camerabox.position.x;
+    if(cameraboxLeftEdge <= 0) return
+    if(cameraboxLeftEdge <= Math.abs(camera.position.x)) {
+      camera.position.x -= this.velocity.x;
+    }
 
   }
 
@@ -58,14 +89,21 @@ class Player extends Sprite {
   update(input, context) {
     this.updateFrames();
     this.updateHitbox();
+    this.updateCamerabox();
     //console.log(this.velocity.x);
     //console.log(this.velocity.y);
     if(this.game.debug) {
+      //Image box
       context.fillStyle = 'rgba(0, 0, 0, 0.575)';
       context.fillRect(this.position.x, this.position.y, this.width, this.height);
 
+      //Hit box
       context.fillStyle = 'rgba(255, 0, 0, 0.575)';
       context.fillRect(this.hitbox.position.x, this.hitbox.position.y, this.hitbox.width, this.hitbox.height);
+
+      //Camera box
+      context.fillStyle = 'rgba(0, 0, 255, 0.275)';
+      context.fillRect(this.camerabox.position.x, this.camerabox.position.y, this.camerabox.width, this.camerabox.height);
     }
 
 
@@ -87,10 +125,12 @@ class Player extends Sprite {
       this.switchSprite('Run');
       this.velocity.x = this.speed;
       this.lastDirection = 'right';
+      this.panCameraLeft();
     } else if(input.includes('ArrowLeft')) {
       this.switchSprite('RunLeft');
         this.velocity.x = -this.speed;
         this.lastDirection = 'left';
+        this.panCameraRight();
     } else if(this.velocity.y === 0) {
       if(this.lastDirection === 'right') this.switchSprite('Idle');
       else if(this.lastDirection === 'left') this.switchSprite('IdleLeft');
@@ -101,6 +141,9 @@ class Player extends Sprite {
       this.velocity.y -= this.bounce;
     }
     if(input.includes('s')) {
+        //this.speed = this.maxSpeed;
+    }
+    if(input.includes('a')) {
         this.switchSprite('Attack1');
     }
     if(this.velocity.y < 0) {
@@ -127,6 +170,17 @@ class Player extends Sprite {
           },
           width: 18,
           height: 28
+    }
+  }
+
+  updateCamerabox() {
+    this.camerabox = {
+        position: {
+          x: this.position.x - 58,
+          y: this.position.y
+        },
+        width: 200,
+        height: 80
     }
   }
 
@@ -212,7 +266,7 @@ class Player extends Sprite {
       for(let i = 0; i < this.platformCollisionBlocks.length; i++) {
           const platformCollisionBlock = this.platformCollisionBlocks[i];
 
-          if(xyCollision({
+          if(platformCollision({
                 object1: this.hitbox,
                 object2: platformCollisionBlock
               })
@@ -224,19 +278,20 @@ class Player extends Sprite {
                     this.velocity.y = 0;
                     const offset = this.hitbox.position.y - this.position.y + this.hitbox.height;
 
-                    //this.position.y = platformCollisionBlock.position.y - offset - 0.01;
+                    this.position.y = platformCollisionBlock.position.y - offset - 0.01;
                     break;
                 }
 
                 //Can/Cannot go through platform bottom
-                if(this.velocity.y < 0) {
-
-                    this.velocity.y = 0;
-                    const offset = this.hitbox.position.y - this.position.y;
-
-                    this.position.y = platformCollisionBlock.position.y + platformCollisionBlock.height - offset + 0.01;
-                    break;
-                }
+                // if(this.velocity.y < 0) {
+                //
+                //     this.velocity.y = 0;
+                //     const offset = this.hitbox.position.y - this.position.y;
+                //
+                //     //This line of code prevents player from travelling through the bottom of a platform
+                //     this.position.y = platformCollisionBlock.position.y + platformCollisionBlock.height - offset + 0.01;
+                //     break;
+                // }
           }
       }
 

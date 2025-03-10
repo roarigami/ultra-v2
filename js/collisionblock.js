@@ -1,9 +1,9 @@
 
 class CollisionBlock {
-  constructor({position}) {
+  constructor({position, blockHeight = 16}) {
       this.position = position;
       this.width = 16;
-      this.height = 16;
+      this.height = blockHeight;
   }
 
   draw(context) {
