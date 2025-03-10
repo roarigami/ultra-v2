@@ -48,6 +48,7 @@ class GameControl {
                       x: xi * 16,
                       y: yi * 16
                     },
+                    blockHeight: 4
                   })
                 )
               }
@@ -127,7 +128,7 @@ class GameControl {
 
     update(context) {
       context.save();
-      //context.scale(4, 4);
+      context.scale(4, 4);
       context.translate(0, -this.background.image.height + this.scaledCanvas.height);
       this.background.update(context);
       //this property must be between save and restore

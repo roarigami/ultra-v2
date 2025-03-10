@@ -6,7 +6,7 @@ class Player extends Sprite {
     this.platformCollisionBlocks = platformCollisionBlocks;
     //this.width = 100 / 4;//height and width set in Sprite class
     //this.height = 100 / 4;//height and width set in Sprite class
-    this.gravity = 2;
+    this.gravity = 1;
     this.speed = 2;
     this.maxSpeed = 10;
     this.bounce = 3;
@@ -27,7 +27,7 @@ class Player extends Sprite {
     }
     this.velocity = {
       x: 0,
-      y: 1
+      y: 0
     }
 
     this.hitbox = {
@@ -232,14 +232,15 @@ class Player extends Sprite {
                 }
 
                 //Can/Cannot go through platform bottom
-                if(this.velocity.y < 0) {
-
-                    this.velocity.y = 0;
-                    const offset = this.hitbox.position.y - this.position.y;
-
-                    this.position.y = platformCollisionBlock.position.y + platformCollisionBlock.height - offset + 0.01;
-                    break;
-                }
+                // if(this.velocity.y < 0) {
+                //
+                //     this.velocity.y = 0;
+                //     const offset = this.hitbox.position.y - this.position.y;
+                //
+                //     //This line of code prevents player from travelling through the bottom of a platform
+                //     this.position.y = platformCollisionBlock.position.y + platformCollisionBlock.height - offset + 0.01;
+                //     break;
+                // }
           }
       }
 
