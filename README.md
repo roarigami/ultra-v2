@@ -2,7 +2,7 @@
 
 ---
 
-<b>Ultra V2 is a 2D platformer.</b>
+<b>Ultra V2 is a 2D platformer [IN-DEV]</b>
 <br>
 
 ### Description
