@@ -62,7 +62,17 @@ class GameControl {
           game: this,
           collisionBlocks: this.collisionBlocks,
           imgsrc: './assets/img/Idle.png',
-          frameRate :8
+          frameRate :8,
+          animations: {
+            Idle: {
+              imgsrc: './assets/img/Idle.png',
+              frameRate :8
+            },
+            Run: {
+              imgsrc: './assets/img/Run.png',
+              frameRate :8
+            },
+          }
         });
         this.background = new Sprite({
           position: {

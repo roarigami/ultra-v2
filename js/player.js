@@ -12,6 +12,12 @@ class Player extends Sprite {
     this.maxBounce = 10;
 
     this.animations = animations;
+    for(let key in this.animations) {
+        const image = new Image();
+        image.src = this.animations[key].imgsrc;
+
+        this.animations[key].image = image;
+    }
 
     this.position = {
       x: 100,
@@ -35,6 +41,12 @@ class Player extends Sprite {
     this.frameX = 0;
     this.frameY = 0;
 
+  }
+
+  switchSprite(key) {
+    //console.log(key)
+    if(this.image === this.animations[key].image) return;
+      this.image = this.animations[key].image;
   }
 
   update(input, context) {
@@ -61,9 +73,13 @@ class Player extends Sprite {
     this.checkVerticalCollision();
 
     //Inputs
-    if(input.includes('ArrowRight')) this.velocity.x = this.speed;
-    else if(input.includes('ArrowLeft')) this.velocity.x = -this.speed;
-      else this.velocity.x = 0;
+    if(input.includes('ArrowRight')) {
+      this.velocity.x = this.speed;
+      this.switchSprite('Run');
+    } else if(input.includes('ArrowLeft')) {
+        this.velocity.x = -this.speed;
+    } else this.velocity.x = 0;
+
     if(input.includes('ArrowUp')) this.velocity.y -= this.bounce;
 
     //Horizontal Boundaries
