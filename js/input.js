@@ -9,8 +9,9 @@ class InputHandler {
                 e.key == 'ArrowLeft' ||
                 e.key == 'ArrowRight' ||
                 //e.key == 'Enter' ||
-                //'s' for strike
-                e.key == 's') &&
+                //'s' for speed
+                e.key == 's' ||
+                e.key == 'a') &&
                 this.keys.indexOf(e.key) === -1) {
               this.keys.push(e.key);
           } else if(e.key === 'd') this.game.debug = !this.game.debug;
@@ -27,8 +28,9 @@ class InputHandler {
                e.key == 'ArrowLeft' ||
                e.key == 'ArrowRight' ||
                //e.key == 'Enter' ||
-               //'s' for strike
-               e.key == 's') {
+               //'s' for speed
+               e.key == 's' ||
+               e.key == 'a') {
               this.keys.splice(this.keys.indexOf(e.key), 1);
           }
           //console.log(this.keys);

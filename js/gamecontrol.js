@@ -107,8 +107,8 @@ class GameControl {
             },
             Attack1: {
               imgsrc: './assets/img/Attack1.png',
-              frameRate :2,
-              frameBuffer: 7
+              frameRate :4,
+              frameBuffer: 10
             },
           }
         });
@@ -127,7 +127,7 @@ class GameControl {
 
     update(context) {
       context.save();
-      context.scale(4, 4);
+      //context.scale(4, 4);
       context.translate(0, -this.background.image.height + this.scaledCanvas.height);
       this.background.update(context);
       //this property must be between save and restore

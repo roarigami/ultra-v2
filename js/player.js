@@ -8,7 +8,7 @@ class Player extends Sprite {
     //this.height = 100 / 4;//height and width set in Sprite class
     this.gravity = 2;
     this.speed = 2;
-    this.maxSpeed = 20;
+    this.maxSpeed = 10;
     this.bounce = 3;
     this.maxBounce = 10;
 
@@ -101,6 +101,9 @@ class Player extends Sprite {
       this.velocity.y -= this.bounce;
     }
     if(input.includes('s')) {
+        //this.speed = this.maxSpeed;
+    }
+    if(input.includes('a')) {
         this.switchSprite('Attack1');
     }
     if(this.velocity.y < 0) {
@@ -224,7 +227,7 @@ class Player extends Sprite {
                     this.velocity.y = 0;
                     const offset = this.hitbox.position.y - this.position.y + this.hitbox.height;
 
-                    //this.position.y = platformCollisionBlock.position.y - offset - 0.01;
+                    this.position.y = platformCollisionBlock.position.y - offset - 0.01;
                     break;
                 }
 
