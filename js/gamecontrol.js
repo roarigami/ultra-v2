@@ -89,42 +89,42 @@ class GameControl {
           imgsrc: './assets/img/Idle.png',
           frameCount :8,
           animations: {
-            Idle: {
+            StandingRight: {
               imgsrc: './assets/img/Idle.png',
               frameCount :8,
               frameBuffer: 4
             },
-            IdleLeft: {
+            StandingLeft: {
               imgsrc: './assets/img/IdleLeft.png',
               frameCount :8,
               frameBuffer: 4
             },
-            Run: {
+            RunningRight: {
               imgsrc: './assets/img/Run.png',
               frameCount :8,
               frameBuffer: 3
             },
-            RunLeft: {
+            RunningLeft: {
               imgsrc: './assets/img/RunLeft.png',
               frameCount :8,
               frameBuffer: 3
             },
-            Jump: {
+            JumpingRight: {
               imgsrc: './assets/img/Jump.png',
               frameCount :2,
               frameBuffer: 3
             },
-            JumpLeft: {
+            JumpingLeft: {
               imgsrc: './assets/img/JumpLeft.png',
               frameCount :2,
               frameBuffer: 3
             },
-            Fall: {
+            FallingRight: {
               imgsrc: './assets/img/Fall.png',
               frameCount :2,
               frameBuffer: 3
             },
-            FallLeft: {
+            FallingLeft: {
               imgsrc: './assets/img/FallLeft.png',
               frameCount :2,
               frameBuffer: 3
@@ -165,6 +165,7 @@ class GameControl {
     }
 
     update(context, deltaTime) {
+      //console.log(this.input.keys);
       context.save();
 
       context.scale(4, 4);
