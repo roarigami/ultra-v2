@@ -44,7 +44,7 @@ class Sprite {
 
   update(context) {
     this.draw(context);
-    this.updateFrames();
+    //this.updateFrames();
   }
 
   updateFrames() {

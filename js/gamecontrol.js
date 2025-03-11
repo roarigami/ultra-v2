@@ -92,12 +92,12 @@ class GameControl {
             Idle: {
               imgsrc: './assets/img/Idle.png',
               frameCount :8,
-              frameBuffer: 3
+              frameBuffer: 4
             },
             IdleLeft: {
               imgsrc: './assets/img/IdleLeft.png',
               frameCount :8,
-              frameBuffer: 3
+              frameBuffer: 4
             },
             Run: {
               imgsrc: './assets/img/Run.png',
@@ -132,7 +132,7 @@ class GameControl {
             Attack1: {
               imgsrc: './assets/img/Attack1.png',
               frameCount :4,
-              frameBuffer: 6
+              frameBuffer: 4
             },
           },
           cameraPos: this.camera
