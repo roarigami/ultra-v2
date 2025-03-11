@@ -1,4 +1,18 @@
 //console.log(floorCollisions);
+const backgroundImageHeight = 432;
+const scaledCanvas = {
+  width: canvasUV2.width / 4,
+  height: canvasUV2.height / 4
+}
+//console.log(canvasUV2.width / 4);
+//backgroundImageHeight + scaledCanvas.height
+const camera = {
+  position: {
+    x: 0,
+    y: -backgroundImageHeight + scaledCanvas.height
+  }
+}
+
 class GameControl {
     constructor(config) {
         this.element = config.element;
@@ -8,6 +22,9 @@ class GameControl {
         this.ctx = this.canvas.getContext('2d', {willReadFrequently: true});
         this.map = null;
         this.debug = true;
+
+        this.speed = 0;
+        this.maxSpeed = 3;
 
         this.scaledCanvas = {
           width: this.width / 4,
@@ -64,63 +81,69 @@ class GameControl {
           collisionBlocks: this.collisionBlocks,
           platformCollisionBlocks: this.platformCollisionBlocks,
           imgsrc: './assets/img/Idle.png',
-          frameRate :8,
+          frameCount :8,
           animations: {
             Idle: {
               imgsrc: './assets/img/Idle.png',
-              frameRate :8,
+              frameCount :8,
               frameBuffer: 3
             },
             IdleLeft: {
               imgsrc: './assets/img/IdleLeft.png',
-              frameRate :8,
+              frameCount :8,
               frameBuffer: 3
             },
             Run: {
               imgsrc: './assets/img/Run.png',
-              frameRate :8,
+              frameCount :8,
               frameBuffer: 3
             },
             RunLeft: {
               imgsrc: './assets/img/RunLeft.png',
-              frameRate :8,
+              frameCount :8,
               frameBuffer: 3
             },
             Jump: {
               imgsrc: './assets/img/Jump.png',
-              frameRate :2,
+              frameCount :2,
               frameBuffer: 3
             },
             JumpLeft: {
               imgsrc: './assets/img/JumpLeft.png',
-              frameRate :2,
+              frameCount :2,
               frameBuffer: 3
             },
             Fall: {
               imgsrc: './assets/img/Fall.png',
-              frameRate :2,
+              frameCount :2,
               frameBuffer: 3
             },
             FallLeft: {
               imgsrc: './assets/img/FallLeft.png',
-              frameRate :2,
+              frameCount :2,
               frameBuffer: 3
             },
             Attack1: {
               imgsrc: './assets/img/Attack1.png',
-              frameRate :4,
-              frameBuffer: 10
+              frameCount :4,
+              frameBuffer: 6
             },
           },
           cameraPos: this.camera
         });
+
+        this.player.currentState = this.player.playerStates[0];
+        this.player.currentState.enter();
+
+        this.lastTime = 0;
+
         this.background = new Sprite({
           position: {
             x: 0,
             y: 0
           },
           imgsrc: './assets/img/background.png',
-          frameRate: 1
+          frameCount: 1
         })
 
         //Made camera global for now
@@ -135,9 +158,9 @@ class GameControl {
         this.gameOver = false;
     }
 
-    update(context) {
+    update(context, deltaTime) {
       context.save();
-      
+
       context.scale(4, 4);
       context.translate(camera.position.x, camera.position.y);//-this.background.image.height + this.scaledCanvas.height
 
@@ -151,7 +174,7 @@ class GameControl {
           platCollBlock.draw(context);
       });
       this.player.checkHorizontalCanvasHitboxCollision();
-      this.player.update(this.input.keys, context);
+      this.player.update(this.input.keys, context, deltaTime);
       context.restore();
 
 
@@ -163,9 +186,12 @@ class GameControl {
     }
 
     startGameLoop(context) {
-      const animate = () => {
+      const animate = (timeStamp) => {
+        const deltaTime = timeStamp - this.lastTime;
+        this.lastTime = timeStamp;
+
         context.clearRect(0, 0, this.width, this.height);
-        this.update(context);//Update method must be called before draw method
+        this.update(context, deltaTime);//Update method must be called before draw method
         this.draw(context);
         if(!this.gameOver) requestAnimationFrame(animate);
       }

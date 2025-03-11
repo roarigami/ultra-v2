@@ -1,13 +1,14 @@
 
 class Player extends Sprite {
-  constructor({game, collisionBlocks, platformCollisionBlocks, imgsrc, frameRate, scale = 0.5, animations, cameraPos}) {
-    super({imgsrc, frameRate, scale});
+  constructor({game, collisionBlocks, platformCollisionBlocks, imgsrc, frameCount, scale = 0.5, animations, cameraPos}) {
+    super({imgsrc, frameCount, scale});
     this.game = game;
     this.collisionBlocks = collisionBlocks;
     this.platformCollisionBlocks = platformCollisionBlocks;
     this.cameraPos = cameraPos;
     //this.width = 100 / 4;//height and width set in Sprite class
     //this.height = 100 / 4;//height and width set in Sprite class
+
     this.gravity = 0.2;
     this.speed = 2;
     this.maxSpeed = 10;
@@ -22,6 +23,9 @@ class Player extends Sprite {
 
         this.animations[key].image = image;
     }
+
+    this.playerStates = [new IdleStand(this.game), new AttackOne(this.game), new RunLeft(this.game),
+                         new RunRight(this.game)];
 
     this.position = {
       x: -10,
@@ -49,10 +53,6 @@ class Player extends Sprite {
         width: 200,
         height: 80
     }
-
-    this.image = Idle;
-    this.frameX = 0;
-    this.frameY = 0;
 
   }
 
@@ -101,20 +101,24 @@ class Player extends Sprite {
     }
   }
 
-  switchSprite(key) {
+  playerState(key) {
     //console.log(key)
     if(this.image === this.animations[key].image || !this.loaded) return;
 
     this.currentFrame = 0;
     this.image = this.animations[key].image;
     this.frameBuffer = this.animations[key].frameBuffer;
-    this.frameRate = this.animations[key].frameRate;
+    this.frameCount = this.animations[key].frameCount;
   }
 
-  update(input, context) {
+  update(input, context, deltaTime) {
     this.updateFrames();
     this.updateHitbox();
     this.updateCamerabox();
+
+    // console.log(this.currentState);
+    // this.currentState.handleInput(input);
+
     //console.log(this.velocity.x);
     //console.log(this.velocity.y);
     if(this.game.debug) {
@@ -148,22 +152,22 @@ class Player extends Sprite {
     //Inputs
     if(input.includes('ArrowRight')) {
 
-      this.switchSprite('Run');
+      this.playerState('Run');
       this.velocity.x = this.speed;
       this.lastDirection = 'right';
       this.panCameraLeft();
 
     } else if(input.includes('ArrowLeft')) {
 
-      this.switchSprite('RunLeft');
+      this.playerState('RunLeft');
         this.velocity.x = -this.speed;
         this.lastDirection = 'left';
         this.panCameraRight();
 
     } else if(this.velocity.y === 0) {
 
-      if(this.lastDirection === 'right') this.switchSprite('Idle');
-      else if(this.lastDirection === 'left') this.switchSprite('IdleLeft');
+      if(this.lastDirection === 'right') this.playerState('Idle');
+      else if(this.lastDirection === 'left') this.playerState('IdleLeft');
       this.velocity.x = 0;
 
     }
@@ -176,16 +180,16 @@ class Player extends Sprite {
         //this.speed = this.maxSpeed;
     }
     if(input.includes('a')) {
-        this.switchSprite('Attack1');
+        this.playerState('Attack1');
     }
     if(this.velocity.y < 0) {
       this.panCameraDown();
-      if(this.lastDirection === 'right') this.switchSprite('Jump');
-      else if(this.lastDirection === 'left') this.switchSprite('JumpLeft');
+      if(this.lastDirection === 'right') this.playerState('Jump');
+      else if(this.lastDirection === 'left') this.playerState('JumpLeft');
     }
     else if(this.velocity.y > 0) {
-      if(this.lastDirection === 'right') this.switchSprite('Fall');
-      else if(this.lastDirection === 'left') this.switchSprite('FallLeft');
+      if(this.lastDirection === 'right') this.playerState('Fall');
+      else if(this.lastDirection === 'left') this.playerState('FallLeft');
       this.panCameraUp();
     }
 
@@ -231,6 +235,13 @@ class Player extends Sprite {
   }
   onGround() {
       return this.velocity.y == 0;
+  }
+
+  setState(playerState, speed) {
+      //Make sure all methods that are using setState are passing all expected arguments otherwise it won't work
+      this.currentState = this.playerStates[playerState];
+      this.game.speed = speed;
+      this.currentState.enter();
   }
 
   checkHorizontalCollision() {

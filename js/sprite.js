@@ -1,18 +1,18 @@
 
 class Sprite {
-  constructor({position, imgsrc, frameRate = 1, frameBuffer = 3, scale = 1}) {
+  constructor({position, imgsrc, frameCount = 1, frameBuffer = 3, scale = 1}) {
     this.position = position;
     this.scale = scale;
     this.loaded = false;
 
     this.image = new Image();
-    this.frameRate = frameRate;
+    this.frameCount = frameCount;
     this.currentFrame = 0;
     this.frameBuffer = frameBuffer;
     this.elapsedFrames = 0;
 
     this.image.onload = () => {
-        this.width = (this.image.width / this.frameRate) * this.scale;
+        this.width = (this.image.width / this.frameCount) * this.scale;
         this.height = (this.image.height) * this.scale;
         this.loaded = true;
     }
@@ -24,13 +24,13 @@ class Sprite {
 
     const cropbox = {
       position: {
-        x: this.currentFrame * (this.image.width / this.frameRate),
+        x: this.currentFrame * (this.image.width / this.frameCount),
         y: 0
       },
-      width: this.image.width / this.frameRate,
+      width: this.image.width / this.frameCount,
       height: this.image.height
     }
-
+    //console.log(this.image);
     context.drawImage(this.image,
                       cropbox.position.x,
                       cropbox.position.y,
@@ -48,12 +48,15 @@ class Sprite {
   }
 
   updateFrames() {
+
     this.elapsedFrames++;
 
     if(this.elapsedFrames % this.frameBuffer === 0) {
-        if(this.currentFrame < this.frameRate - 1) this.currentFrame++;
+        if(this.currentFrame < this.frameCount - 1) this.currentFrame++;
           else this.currentFrame = 0;
     }
 
   }
+
+
 }
