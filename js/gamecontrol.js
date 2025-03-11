@@ -74,7 +74,13 @@ class GameControl {
 
         //this.groundMargin = 0;
         this.input = new InputHandler(this);
-        //this.sprite = new Sprite();
+        this.particles = [];
+        this.maxParticles = 100;
+        this.enemies = [];
+        this.enemyTimer = 0;
+        this.enemyInterval = 1000;
+
+        this.collisions = [];
 
         this.player = new Player({
           game: this,
@@ -175,6 +181,20 @@ class GameControl {
       });
       this.player.checkHorizontalCanvasHitboxCollision();
       this.player.update(this.input.keys, context, deltaTime);
+
+      //Enemy handler
+      if(this.enemyTimer > this.enemyInterval) {
+          this.addEnemy();
+          this.enemyTimer = 0;
+      } else {
+          this.enemyTimer += deltaTime;
+      }
+      this.enemies.forEach(enemy => {
+          enemy.update(deltaTime);
+          if(enemy.markedForDeletion) this.enemies.splice(this.enemies.indexOf(enemy), 1);
+      });
+
+
       context.restore();
 
 
