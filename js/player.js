@@ -45,6 +45,15 @@ class Player extends Sprite {
           height: 28
     }
 
+    this.attackbox = {
+      position: {
+        x: this.hitbox.position.x,
+        y: this.hitbox.position.y
+      },
+      width: 50,
+      height: 5
+    }
+
     this.camerabox = {
         position: {
           x: this.position.x - 50,
@@ -114,6 +123,7 @@ class Player extends Sprite {
   update(input, context, deltaTime) {
     this.updateFrames();
     this.updateHitbox();
+    this.updateAttackbox();
     this.updateCamerabox();
 
     // console.log(this.currentState);
@@ -129,6 +139,10 @@ class Player extends Sprite {
       //Hit box
       context.fillStyle = 'rgba(255, 0, 0, 0.575)';
       context.fillRect(this.hitbox.position.x, this.hitbox.position.y, this.hitbox.width, this.hitbox.height);
+
+      //Attack box
+      context.fillStyle = 'rgba(255, 0, 0, 0.575)';
+      context.fillRect(this.attackbox.position.x, this.attackbox.position.y, this.attackbox.width, this.attackbox.height);
 
       //Camera box
       context.fillStyle = 'rgba(0, 0, 255, 0.275)';
@@ -208,6 +222,17 @@ class Player extends Sprite {
           },
           width: 18,
           height: 28
+    }
+  }
+
+  updateAttackbox() {
+    this.attackbox = {
+      position: {
+        x: this.hitbox.position.x,
+        y: this.hitbox.position.y + 10
+      },
+      width: 50,
+      height: 5
     }
   }
 
