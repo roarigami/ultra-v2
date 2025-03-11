@@ -197,8 +197,6 @@ class GameControl {
 
       context.restore();
 
-
-
     }
 
     draw(context) {
@@ -216,6 +214,14 @@ class GameControl {
         if(!this.gameOver) requestAnimationFrame(animate);
       }
       animate(0);
+    }
+
+    addEnemy() {
+        //Only want to add plant ground chaacters when the game is moving
+        //Otherwise they would just be accumulating off screen
+        //if(this.speed > 0 && Math.random() < 0.5) this.enemies.push(new GroundEnemy(this));
+        //else if(this.speed > 0) this.enemies.push(new ClimbingEnemy(this));
+        this.enemies.push(new AerialEnemy(this));
     }
 
     init() {
