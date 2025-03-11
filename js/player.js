@@ -173,7 +173,7 @@ class Player extends Sprite {
 
     } else if(input.includes('ArrowLeft')) {
 
-      this.playerState('RunLeft');
+        this.playerState('RunLeft');
         this.velocity.x = -this.speed;
         this.lastDirection = 'left';
         this.panCameraRight();
@@ -187,12 +187,14 @@ class Player extends Sprite {
     }
 
     if(input.includes('ArrowUp')) {
+      this.updateHitbox();
       //if(this.onGround())
       this.velocity.y -= this.bounce;
       this.panCameraDown();
     }
+    //console.log(this.speed);
     if(input.includes('s')) {
-        //this.speed = this.maxSpeed;
+      this.playerSpeedBoost();
     }
     if(input.includes('a')) {
         this.playerState('Attack1');
@@ -214,6 +216,13 @@ class Player extends Sprite {
     // if(this.hitbox.position.x < 0) this.hitbox.position.x = 0;
     // if(this.hitbox.position.x > this.game.width - this.width) this.hitbox.position.x = this.game.width - this.width;
 
+  }
+
+  playerSpeedBoost() {
+    this.speed = this.maxSpeed;
+    setTimeout(() => {
+      this.speed = 2;
+    }, 100);
   }
 
   playerAttack() {
