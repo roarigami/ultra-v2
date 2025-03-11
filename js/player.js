@@ -231,7 +231,7 @@ class Player extends Sprite {
         x: this.hitbox.position.x,
         y: this.hitbox.position.y + 10
       },
-      width: 50,
+      width: 40,
       height: 5
     }
   }
