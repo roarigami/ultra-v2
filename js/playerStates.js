@@ -20,6 +20,7 @@ class IdleStand extends PlayerState {
   }
   enter() {
     this.game.player.playerState('Idle');
+    this.game.player.maxFrame = 3;
     console.log('Idle Stand');
   }
   handleInput(input) {
@@ -47,6 +48,7 @@ class AttackOne extends PlayerState {
     }
     enter() {
       this.game.player.playerState('Attack1');
+      this.game.player.maxFrame = 4;
       //console.log('Attackkkkkkk!');
     }
     handleInput(input) {
@@ -64,6 +66,7 @@ class RunRight extends PlayerState {
     }
     enter() {
       this.game.player.playerState('RunRight');
+      this.game.player.maxFrame = 7;
       //console.log('Attackkkkkkk!');
     }
     handleInput(input) {
@@ -81,6 +84,7 @@ class RunLeft extends PlayerState {
     }
     enter() {
       this.game.player.playerState('RunLeft');
+      this.game.player.maxFrame = 7;
       //console.log('Attackkkkkkk!');
     }
     handleInput(input) {

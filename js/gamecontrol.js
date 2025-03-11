@@ -92,12 +92,12 @@ class GameControl {
             Idle: {
               imgsrc: './assets/img/Idle.png',
               frameCount :8,
-              frameBuffer: 3
+              frameBuffer: 4
             },
             IdleLeft: {
               imgsrc: './assets/img/IdleLeft.png',
               frameCount :8,
-              frameBuffer: 3
+              frameBuffer: 4
             },
             Run: {
               imgsrc: './assets/img/Run.png',
@@ -132,7 +132,7 @@ class GameControl {
             Attack1: {
               imgsrc: './assets/img/Attack1.png',
               frameCount :4,
-              frameBuffer: 6
+              frameBuffer: 4
             },
           },
           cameraPos: this.camera
@@ -221,6 +221,7 @@ class GameControl {
         //Otherwise they would just be accumulating off screen
         //if(this.speed > 0 && Math.random() < 0.5) this.enemies.push(new GroundEnemy(this));
         //else if(this.speed > 0) this.enemies.push(new ClimbingEnemy(this));
+        //console.log(this.enemies);
         this.enemies.push(new AerialEnemy(this));
     }
 

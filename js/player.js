@@ -15,6 +15,8 @@ class Player extends Sprite {
     this.bounce = 1;
     this.maxBounce = 10;
 
+    this.isAttacking;
+
     this.lastDirection = 'right';
     this.animations = animations;
     for(let key in this.animations) {
@@ -126,11 +128,12 @@ class Player extends Sprite {
     this.updateAttackbox();
     this.updateCamerabox();
 
-    // console.log(this.currentState);
-    // this.currentState.handleInput(input);
+    //console.log(this.currentState);
+    //this.currentState.handleInput(input);
 
-    //console.log(this.velocity.x);
-    //console.log(this.velocity.y);
+    this.applyGravity();
+
+
     if(this.game.debug) {
       //Image box
       context.fillStyle = 'rgba(0, 0, 0, 0.575)';
@@ -141,27 +144,24 @@ class Player extends Sprite {
       context.fillRect(this.hitbox.position.x, this.hitbox.position.y, this.hitbox.width, this.hitbox.height);
 
       //Attack box
-      context.fillStyle = 'rgba(255, 0, 0, 0.575)';
-      context.fillRect(this.attackbox.position.x, this.attackbox.position.y, this.attackbox.width, this.attackbox.height);
+      if(this.isAttacking == true) {
+        context.fillStyle = 'rgba(255, 0, 0, 0.575)';
+        context.fillRect(this.attackbox.position.x, this.attackbox.position.y, this.attackbox.width, this.attackbox.height);
+      }
 
       //Camera box
       context.fillStyle = 'rgba(0, 0, 255, 0.275)';
       context.fillRect(this.camerabox.position.x, this.camerabox.position.y, this.camerabox.width, this.camerabox.height);
     }
 
-
-
     this.position.x += this.velocity.x;
     this.draw(context);
 
     this.checkHorizontalCollision();
 
-    //if(!this.onGround()) this.applyGravity();
-    //else this.velocity.y = 0;
-    this.applyGravity();
-
     this.updateHitbox();//Hitbox must be right here //bad design
     this.checkVerticalCollision();
+    //console.log(this.checkVerticalCollision());
 
     //Inputs
     if(input.includes('ArrowRight')) {
@@ -187,6 +187,7 @@ class Player extends Sprite {
     }
 
     if(input.includes('ArrowUp')) {
+      //if(this.onGround())
       this.velocity.y -= this.bounce;
       this.panCameraDown();
     }
@@ -195,6 +196,7 @@ class Player extends Sprite {
     }
     if(input.includes('a')) {
         this.playerState('Attack1');
+        this.playerAttack();
     }
     if(this.velocity.y < 0) {
       this.panCameraDown();
@@ -214,6 +216,13 @@ class Player extends Sprite {
 
   }
 
+  playerAttack() {
+    this.isAttacking = true;
+    setTimeout(() => {
+      this.isAttacking = false;
+    }, 100);
+  }
+
   updateHitbox() {
     this.hitbox = {
           position: {
@@ -231,7 +240,7 @@ class Player extends Sprite {
         x: this.hitbox.position.x,
         y: this.hitbox.position.y + 10
       },
-      width: 50,
+      width: 40,
       height: 5
     }
   }
@@ -259,7 +268,7 @@ class Player extends Sprite {
     this.position.y += this.velocity.y;
   }
   onGround() {
-      return this.velocity.y == 0;
+      return this.velocity.y <= 0.2 && this.velocity.y >= 0;
   }
 
   setState(playerState, speed) {
@@ -267,6 +276,18 @@ class Player extends Sprite {
       this.currentState = this.playerStates[playerState];
       this.game.speed = speed;
       this.currentState.enter();
+  }
+
+  checkAttackCollision() {
+      this.game.enemies.forEach(enemy => {
+          if(this.attackbox.position.x + player.attackbox.width >= enemy.x &&
+             this.attackbox.position.x <= enemy.x + enemy.width &&
+             this.attackbox.position.y + player.attackbox.height >= enemy.y &&
+             this.attackbox.position.y <= enemy.y + enemy.height &&
+             this.isAttacking) {
+               this.isAttacking = false;
+          }
+      });
   }
 
   checkHorizontalCollision() {
