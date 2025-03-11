@@ -10,24 +10,11 @@ class Player extends Sprite {
     //this.height = 100 / 4;//height and width set in Sprite class
 
     this.gravity = 0.2;
-    this.speed = 2;
-    this.maxSpeed = 10;
+
     this.bounce = 1;
     this.maxBounce = 10;
 
     this.isAttacking;
-
-    this.lastDirection = 'right';
-    this.animations = animations;
-    for(let key in this.animations) {
-        const image = new Image();
-        image.src = this.animations[key].imgsrc;
-
-        this.animations[key].image = image;
-    }
-
-    this.playerStates = [new IdleStand(this.game), new AttackOne(this.game), new RunLeft(this.game),
-                         new RunRight(this.game)];
 
     this.position = {
       x: -10,
@@ -37,6 +24,18 @@ class Player extends Sprite {
       x: 0,
       y: 0
     }
+
+    this.speedLevelOne = 2;
+    this.speedLevelTwo = 2.25;
+    this.speedLevelThree = 2,5;
+    this.speedLevelFour = 2.75;
+    this.speedLevelFive = 3;
+    this.speedBoostLevelOne = 1;
+    this.speedBoostLevelTwo = 2;
+    this.speedBoostLevelThree = 3;
+
+    this.speed = this.velocity.x + this.speedLevelOne;
+
 
     this.hitbox = {
           position: {
@@ -64,6 +63,23 @@ class Player extends Sprite {
         width: 200,
         height: 80
     }
+
+    this.lastDirection = 'right';
+    this.animations = animations;
+    for(let key in this.animations) {
+        const image = new Image();
+        image.src = this.animations[key].imgsrc;
+
+        this.animations[key].image = image;
+    }
+
+    this.playerStates = [new StandingLeft(this.game), new StandingRight(this.game),
+                         //new CrouchingLeft(this.game), new CrouchingRight(this.game),
+                         new RunningLeft(this.game), new RunningRight(this.game),
+                         new JumpingLeft(this.game), new JumpingRight(this.game),
+                         new FallingLeft(this.game), new FallingRight(this.game)];
+    this.currentState = this.playerStates[1];
+
 
   }
 
@@ -114,6 +130,7 @@ class Player extends Sprite {
 
   playerState(key) {
     //console.log(key)
+    //console.log(this.animations[key].image)
     if(this.image === this.animations[key].image || !this.loaded) return;
 
     this.currentFrame = 0;
@@ -129,7 +146,7 @@ class Player extends Sprite {
     this.updateCamerabox();
 
     //console.log(this.currentState);
-    //this.currentState.handleInput(input);
+    this.currentState.handleInput(input);
 
     this.applyGravity();
 
@@ -166,22 +183,22 @@ class Player extends Sprite {
     //Inputs
     if(input.includes('ArrowRight')) {
 
-      this.playerState('Run');
+      this.playerState('RunningRight');
       this.velocity.x = this.speed;
       this.lastDirection = 'right';
       this.panCameraLeft();
 
     } else if(input.includes('ArrowLeft')) {
 
-        this.playerState('RunLeft');
+        this.playerState('RunningLeft');
         this.velocity.x = -this.speed;
         this.lastDirection = 'left';
         this.panCameraRight();
 
     } else if(this.velocity.y === 0) {
 
-      if(this.lastDirection === 'right') this.playerState('Idle');
-      else if(this.lastDirection === 'left') this.playerState('IdleLeft');
+      if(this.lastDirection === 'right') this.playerState('StandingRight');
+      else if(this.lastDirection === 'left') this.playerState('StandingLeft');
       this.velocity.x = 0;
 
     }
@@ -196,19 +213,23 @@ class Player extends Sprite {
     if(input.includes('s')) {
       this.playerSpeedBoost();
     }
-    if(input.includes('a')) {
-        this.playerState('Attack1');
-        this.playerAttack();
-    }
+    // if(input.includes('a')) {
+    //     this.playerState('Attack1');
+    //     this.playerAttack();
+    // }
     if(this.velocity.y < 0) {
       this.panCameraDown();
-      if(this.lastDirection === 'right') this.playerState('Jump');
-      else if(this.lastDirection === 'left') this.playerState('JumpLeft');
+      if(this.lastDirection === 'right') this.playerState('Jumping');
+      else if(this.lastDirection === 'left') this.playerState('JumpingLeft');
     }
     else if(this.velocity.y > 0) {
-      if(this.lastDirection === 'right') this.playerState('Fall');
-      else if(this.lastDirection === 'left') this.playerState('FallLeft');
+      if(this.lastDirection === 'right') this.playerState('Falling');
+      else if(this.lastDirection === 'left') this.playerState('FallingLeft');
       this.panCameraUp();
+    }
+
+    if(input.includes('')) {
+
     }
 
     //Horizontal Boundaries
@@ -219,7 +240,7 @@ class Player extends Sprite {
   }
 
   playerSpeedBoost() {
-    this.speed = this.maxSpeed;
+    this.speed = this.speed + this.speedBoostLevelOne;
     setTimeout(() => {
       this.speed = 2;
     }, 100);
@@ -280,10 +301,9 @@ class Player extends Sprite {
       return this.velocity.y <= 0.2 && this.velocity.y >= 0;
   }
 
-  setState(playerState, speed) {
-      //Make sure all methods that are using setState are passing all expected arguments otherwise it won't work
+  setPlayerState(playerState) {
+      //Make sure all methods that are using setPlayerState are passing all expected arguments otherwise it won't work
       this.currentState = this.playerStates[playerState];
-      this.game.speed = speed;
       this.currentState.enter();
   }
 
