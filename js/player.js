@@ -9,8 +9,8 @@ class Player extends Sprite {
     //this.width = 100 / 4;//height and width set in Sprite class
     //this.height = 100 / 4;//height and width set in Sprite class
 
-    this.gravity = 0.2;
-    this.bounce = 1;
+    this.gravity = 0.1;
+    this.bounce = 4;
     this.maxBounce = 10;
 
     this.isAttacking;
@@ -148,6 +148,7 @@ class Player extends Sprite {
 
   playerState(key) {
     //console.log(key)
+    //If last key is equal to arrowUp return
     if(this.image === this.animations[key].image || !this.loaded) return;
 
     this.currentFrame = 0;
@@ -255,7 +256,9 @@ class Player extends Sprite {
     //if(input === 'PRESS up')
       //this.updateHitbox();
       //if(this.onGround())
-      this.velocity.y -= this.bounce;
+      if(this.velocity.y == 0) {
+        this.velocity.y -= this.bounce;
+      }
       this.panCameraDown();
     }
     //console.log(this.speed);
