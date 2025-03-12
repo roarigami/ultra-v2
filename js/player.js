@@ -9,8 +9,8 @@ class Player extends Sprite {
     //this.width = 100 / 4;//height and width set in Sprite class
     //this.height = 100 / 4;//height and width set in Sprite class
 
-    this.gravity = 0.1;
-    this.bounce = 4;
+    this.gravity = 0.01;
+    this.bounce = 5;
     this.maxBounce = 10;
 
     this.isAttacking;
@@ -26,7 +26,7 @@ class Player extends Sprite {
       y: 0
     }
 
-    this.speedLevelOne = 2;
+    this.speedLevelOne = 0.15;
     this.speedLevelTwo = 2.25;
     this.speedLevelThree = 2,5;
     this.speedLevelFour = 2.75;
@@ -101,22 +101,22 @@ class Player extends Sprite {
 
   }
 
-  panCameraLeft() {
+  panCameraLeft(deltaTime) {
     const cameraboxRightEdge = this.camerabox.position.x + this.camerabox.width;
     const canvasWidthScaled = canvasUV2.width / 4;
 
     if(cameraboxRightEdge >= 576) return
     if(cameraboxRightEdge >= canvasWidthScaled + Math.abs(camera.position.x)) {
       //console.log(this.cameraPos);
-      camera.position.x -= this.velocity.x;
+      camera.position.x -= this.velocity.x * deltaTime;
     }
   }
 
-  panCameraRight() {
+  panCameraRight(deltaTime) {
     const cameraboxLeftEdge = this.camerabox.position.x;
     if(cameraboxLeftEdge <= 0) return
     if(cameraboxLeftEdge <= Math.abs(camera.position.x)) {
-      camera.position.x -= this.velocity.x;
+      camera.position.x -= this.velocity.x * deltaTime;
     }
 
   }
@@ -159,55 +159,24 @@ class Player extends Sprite {
 
   update(input, context, deltaTime) {
     //console.log(this.frameTimer)
-    //console.log(this.currentState);
-    //this.currentState.handleInput(input);
-
+    this.position.x += this.velocity.x * deltaTime;
     this.updateFrames();
     this.updateHitbox();
+
     this.updateAttackbox();
     this.updateCamerabox();
 
-    this.applyGravity();
+    this.applyGravity(deltaTime);
 
+    this.playerDraw(context, deltaTime);
+    this.draw(context, deltaTime);
 
-    if(this.game.debug) {
-      //Image box
-      context.fillStyle = 'rgba(0, 0, 0, 0.575)';
-      context.fillRect(this.position.x, this.position.y, this.width, this.height);
-
-      //Hit box
-      context.fillStyle = 'rgba(15, 255, 0, 0.575)';
-      context.fillRect(this.hitbox.position.x, this.hitbox.position.y, this.hitbox.width, this.hitbox.height);
-
-      //Attack1 box
-      if(this.isAttacking == true) {
-        context.fillStyle = 'rgba(255, 0, 0, 0.575)';
-        context.fillRect(this.attackbox.position.x, this.attackbox.position.y, this.attackbox.width, this.attackbox.height);
-      }
-
-      //Attack3 box
-      if(this.isAttacking2 == true) {
-        context.fillStyle = 'rgba(255, 0, 0, 0.575)';
-        context.fillRect(this.attackbox2.position.x, this.attackbox2.position.y, this.attackbox2.width, this.attackbox2.height);
-      }
-
-      //Attack3 box
-      if(this.isAttacking3 == true) {
-        context.fillStyle = 'rgba(255, 0, 0, 0.575)';
-        context.fillRect(this.attackbox3.position.x, this.attackbox3.position.y, this.attackbox3.width, this.attackbox3.height);
-      }
-
-      //Camera box
-      context.fillStyle = 'rgba(0, 0, 255, 0.275)';
-      context.fillRect(this.camerabox.position.x, this.camerabox.position.y, this.camerabox.width, this.camerabox.height);
-    }
-
-    this.position.x += this.velocity.x;
-    this.draw(context);
-
+    //this.updateHorizontalPosition(deltaTime);
     this.checkHorizontalCollision();
 
     this.updateHitbox();//Hitbox must be right here //bad design
+
+    //this.updateVerticalPosition(deltaTime);
     this.checkVerticalCollision();
     //console.log(this.checkVerticalCollision());
 
@@ -234,7 +203,7 @@ class Player extends Sprite {
       this.playerState('RunningRight');
       this.velocity.x = this.speed;
       this.lastDirection = 'right';
-      this.panCameraLeft();
+      this.panCameraLeft(deltaTime);
 
     } else if(input.includes('ArrowLeft')) {
             //if(input === 'PRESS left') {
@@ -242,7 +211,7 @@ class Player extends Sprite {
         this.playerState('RunningLeft');
         this.velocity.x = -this.speed;
         this.lastDirection = 'left';
-        this.panCameraRight();
+        this.panCameraRight(deltaTime);
 
     } else if(this.velocity.y === 0) {
 
@@ -256,9 +225,7 @@ class Player extends Sprite {
     //if(input === 'PRESS up')
       //this.updateHitbox();
       //if(this.onGround())
-      if(this.velocity.y == 0) {
-        this.velocity.y -= this.bounce;
-      }
+      this.playerJump();
       this.panCameraDown();
     }
     //console.log(this.speed);
@@ -271,10 +238,14 @@ class Player extends Sprite {
 
     if(this.velocity.y < 0) {
       this.panCameraDown();
-      if(this.lastDirection === 'right') this.playerState('JumpingRight');
-      else if(this.lastDirection === 'left') this.playerState('JumpingLeft');
+      //if(input.includes('Attack1')) {
+        if(this.lastDirection === 'right') this.playerState('JumpingRight');
+        else if(this.lastDirection === 'left') this.playerState('JumpingLeft');
+      //}
+
     }
     else if(this.velocity.y > 0) {
+
       if(this.lastDirection === 'right') this.playerState('FallingRight');
       else if(this.lastDirection === 'left') this.playerState('FallingLeft');
       this.panCameraUp();
@@ -366,27 +337,61 @@ class Player extends Sprite {
     }
   }
 
-  // draw(context) {
-  //   context.fillStyle = "red";
-  //   context.fillRect(this.position.x, this.position.y, this.width, this.height);
-  //   // context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.position.x, this.position.y,
-  //   // this.width, this.height);
-  // }
-  // draw(context, deltaTime) {
-  //     if(this.frameTimer > this.frameInterval) {
-  //         if(this.frameX < this.maxFrame) this.frameX++;
-  //         else this.frameX = 0;
-  //         this.frameTimer = 0;
-  //     } else {
-  //         this.frameTimer += deltaTime;
-  //     }
-  //     context.drawImage(this.image, this.width * this.frameX, this.height * this.frameY,
-  //     this.width, this.height, this.x, this.y, this.width, this.height);
-  // }
 
-  applyGravity() {
-    this.velocity.y += this.gravity;//This must be first
+  playerDraw(context, deltaTime) {
+    if(this.game.debug) {
+      //Image box
+      context.fillStyle = 'rgba(0, 0, 0, 0.575)';
+      context.fillRect(this.position.x, this.position.y, this.width, this.height);
+
+      //Hit box
+      context.fillStyle = 'rgba(15, 255, 0, 0.575)';
+      context.fillRect(this.hitbox.position.x, this.hitbox.position.y, this.hitbox.width, this.hitbox.height);
+
+      //Attack1 box
+      if(this.isAttacking == true) {
+        context.fillStyle = 'rgba(255, 0, 0, 0.575)';
+        context.fillRect(this.attackbox.position.x, this.attackbox.position.y, this.attackbox.width, this.attackbox.height);
+      }
+
+      //Attack3 box
+      if(this.isAttacking2 == true) {
+        context.fillStyle = 'rgba(255, 0, 0, 0.575)';
+        context.fillRect(this.attackbox2.position.x, this.attackbox2.position.y, this.attackbox2.width, this.attackbox2.height);
+      }
+
+      //Attack3 box
+      if(this.isAttacking3 == true) {
+        context.fillStyle = 'rgba(255, 0, 0, 0.575)';
+        context.fillRect(this.attackbox3.position.x, this.attackbox3.position.y, this.attackbox3.width, this.attackbox3.height);
+      }
+
+      //Camera box
+      context.fillStyle = 'rgba(0, 0, 255, 0.275)';
+      context.fillRect(this.camerabox.position.x, this.camerabox.position.y, this.camerabox.width, this.camerabox.height);
+    }
+  }
+
+  playerJump() {
+    if(this.velocity.y === 0) {
+      this.velocity.y = -this.bounce;
+    }
+  }
+
+  updateHorizontalPosition(deltaTime) {
+    this.position.x += this.velocity.x * deltaTime;
+    this.hitbox.x += this.velocity.x * deltaTime;
+  }
+
+  updateVerticalPosition(deltaTime) {
+    this.position.y += this.velocity.y * deltaTime;
+    this.hitbox.y += this.velocity.y * deltaTime;
+  }
+
+  applyGravity(deltaTime) {
+    this.velocity.y += this.gravity * deltaTime;//This must be first
     this.position.y += this.velocity.y;
+    this.hitbox.y += this.velocity.y
   }
   onGround() {
       return this.velocity.y <= 0.2 && this.velocity.y >= 0;
@@ -411,6 +416,7 @@ class Player extends Sprite {
   }
 
   checkHorizontalCollision() {
+      const colissionBuffer = 0.0001;
       for(let i = 0; i < this.collisionBlocks.length; i++) {
           const collisionBlock = this.collisionBlocks[i];
 
@@ -427,7 +433,7 @@ class Player extends Sprite {
                     this.velocity.x = 0;
                     const offset = this.hitbox.position.x - this.position.x + this.hitbox.width;
 
-                    this.position.x = collisionBlock.position.x - offset - 0.01;
+                    this.position.x = collisionBlock.position.x - offset - colissionBuffer;
                     break;
                 }
                 if(this.velocity.x < 0) {
@@ -435,7 +441,7 @@ class Player extends Sprite {
                     this.velocity.x = 0;
                     const offset = this.hitbox.position.x - this.position.x;
 
-                    this.position.x = collisionBlock.position.x + collisionBlock.width - offset + 0.01;
+                    this.position.x = collisionBlock.position.x + collisionBlock.width - offset + colissionBuffer;
                     break;
                 }
           }
@@ -443,6 +449,7 @@ class Player extends Sprite {
   }
 
   checkVerticalCollision() {
+    const colissionBuffer = 0.0001;
       for(let i = 0; i < this.collisionBlocks.length; i++) {
           const collisionBlock = this.collisionBlocks[i];
 
@@ -458,7 +465,7 @@ class Player extends Sprite {
                     this.velocity.y = 0;
                     const offset = this.hitbox.position.y - this.position.y + this.hitbox.height;
 
-                    this.position.y = collisionBlock.position.y - offset - 0.01;
+                    this.position.y = collisionBlock.position.y - offset - colissionBuffer;
                     break;
                 }
                 //Cannot go through ceiling
@@ -467,7 +474,7 @@ class Player extends Sprite {
                     this.velocity.y = 0;
                     const offset = this.hitbox.position.y - this.position.y;
 
-                    this.position.y = collisionBlock.position.y + collisionBlock.height - offset + 0.01;
+                    this.position.y = collisionBlock.position.y + collisionBlock.height - offset + colissionBuffer;
                     break;
                 }
           }
@@ -489,7 +496,7 @@ class Player extends Sprite {
                     this.velocity.y = 0;
                     const offset = this.hitbox.position.y - this.position.y + this.hitbox.height;
 
-                    this.position.y = platformCollisionBlock.position.y - offset - 0.01;
+                    this.position.y = platformCollisionBlock.position.y - offset - colissionBuffer;
                     break;
                 }
 
@@ -500,7 +507,7 @@ class Player extends Sprite {
                 //     const offset = this.hitbox.position.y - this.position.y;
                 //
                 //     //This line of code prevents player from travelling through the bottom of a platform
-                //     this.position.y = platformCollisionBlock.position.y + platformCollisionBlock.height - offset + 0.01;
+                //     this.position.y = platformCollisionBlock.position.y + platformCollisionBlock.height - offset + colissionBuffer;
                 //     break;
                 // }
           }

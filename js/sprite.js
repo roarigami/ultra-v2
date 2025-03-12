@@ -19,7 +19,7 @@ class Sprite {
     this.image.src = imgsrc;
   }
 
-  draw(context) {
+  draw(context, deltaTime) {
     if(!this.image) return;
 
     const cropbox = {
@@ -42,19 +42,22 @@ class Sprite {
                       this.height);
   }
 
-  update(context) {
+  update(context, deltaTime) {
+    //console.log(deltaTime)
     this.draw(context);
-    this.updateFrames();
+    this.updateFrames(deltaTime);
   }
 
-  updateFrames() {
+  updateFrames(deltaTime) {
 
     this.elapsedFrames++;
 
     if(this.elapsedFrames % this.frameBuffer === 0) {
         if(this.currentFrame < this.frameCount - 1) this.currentFrame++;
           else this.currentFrame = 0;
-    }
+    } //else {
+        //this.elapsedFrames += deltaTime;
+    //}
 
   }
 
