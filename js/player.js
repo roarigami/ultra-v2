@@ -50,7 +50,7 @@ class Player extends Sprite {
         x: this.hitbox.position.x,
         y: this.hitbox.position.y
       },
-      width: 50,
+      width: 70,
       height: 5
     }
 
@@ -129,7 +129,6 @@ class Player extends Sprite {
 
   playerState(key) {
     //console.log(key)
-    //console.log(this.animations[key].image)
     if(this.image === this.animations[key].image || !this.loaded) return;
 
     this.currentFrame = 0;
@@ -157,14 +156,14 @@ class Player extends Sprite {
       context.fillRect(this.position.x, this.position.y, this.width, this.height);
 
       //Hit box
-      context.fillStyle = 'rgba(255, 0, 0, 0.575)';
+      context.fillStyle = 'rgba(15, 255, 0, 0.575)';
       context.fillRect(this.hitbox.position.x, this.hitbox.position.y, this.hitbox.width, this.hitbox.height);
 
       //Attack box
-      if(this.isAttacking == true) {
+      //if(this.isAttacking == true) {
         context.fillStyle = 'rgba(255, 0, 0, 0.575)';
         context.fillRect(this.attackbox.position.x, this.attackbox.position.y, this.attackbox.width, this.attackbox.height);
-      }
+      //}
 
       //Camera box
       context.fillStyle = 'rgba(0, 0, 255, 0.275)';
@@ -183,8 +182,12 @@ class Player extends Sprite {
     //console.log(input);
 
     //Inputs
+    if(input.includes('a')){
+    //if(input === 'PRESS a')
+        this.playerState('Attack1');
+        this.playerAttack();
 
-    if(input.includes('ArrowRight')){
+    } else if(input.includes('ArrowRight')){
     // if(input === 'PRESS right') {
       this.playerState('RunningRight');
       this.velocity.x = this.speed;
@@ -221,11 +224,7 @@ class Player extends Sprite {
       //if(this.lastDirection === 'right') this.playerState('SpeedBoostRight');
       //else if(this.lastDirection === 'left') this.playerState('SpeedBoostLeft');
     }
-    if(input.includes('a')){
-    //if(input === 'PRESS a')
-        this.playerState('Attack1');
-        this.playerAttack();
-    }
+
     if(this.velocity.y < 0) {
       this.panCameraDown();
       if(this.lastDirection === 'right') this.playerState('JumpingRight');
@@ -259,7 +258,7 @@ class Player extends Sprite {
     this.isAttacking = true;
     setTimeout(() => {
       this.isAttacking = false;
-    }, 100);
+    }, 225);
   }
 
   updateHitbox() {
@@ -279,8 +278,8 @@ class Player extends Sprite {
         x: this.hitbox.position.x,
         y: this.hitbox.position.y + 10
       },
-      width: 40,
-      height: 5
+      width: 45,
+      height: 10
     }
   }
 

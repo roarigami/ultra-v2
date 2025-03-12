@@ -16,7 +16,42 @@ class InputHandler {
                 this.keys.indexOf(e.key) === -1) {
               this.keys.push(e.key);
           } else if(e.key === 'd') this.game.debug = !this.game.debug;
-          // //console.log(e.key);
+          //console.log(e.key);
+
+          // switch(e.key){
+          //     case "ArrowLeft":
+          //         this.lastKey = "PRESS left";
+          //         this.keys.push(e.key)
+          //         break
+          //     case "ArrowRight":
+          //         this.lastKey = "PRESS right";
+          //         this.keys.push(e.key)
+          //         break
+          //     case "ArrowDown":
+          //         this.lastKey = "PRESS down";
+          //         this.keys.push(e.key)
+          //         break
+          //     case "ArrowUp":
+          //         this.lastKey = "PRESS up";
+          //         this.keys.push(e.key)
+          //         break
+          //
+          //     case "s":
+          //         this.lastKey = "PRESS s";
+          //         this.keys.push(e.key)
+          //         break
+          //
+          //     case "a":
+          //         this.lastKey = "PRESS a";
+          //         this.keys.push(e.key)
+          //         break
+          //
+          //     case "d":
+          //         this.lastKey = "PRESS d";
+          //         this.game.debug = !this.game.debug;
+          //         this.keys.push(e.key)
+          //         break
+          // }
 
           // switch(e.key){
           //     case "ArrowLeft":
