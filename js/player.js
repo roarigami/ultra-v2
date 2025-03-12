@@ -10,7 +10,6 @@ class Player extends Sprite {
     //this.height = 100 / 4;//height and width set in Sprite class
 
     this.gravity = 0.2;
-
     this.bounce = 1;
     this.maxBounce = 10;
 
@@ -140,13 +139,14 @@ class Player extends Sprite {
   }
 
   update(input, context, deltaTime) {
+    //console.log(this.frameTimer)
+    //console.log(this.currentState);
+    //this.currentState.handleInput(input);
+
     this.updateFrames();
     this.updateHitbox();
     this.updateAttackbox();
     this.updateCamerabox();
-
-    //console.log(this.currentState);
-    this.currentState.handleInput(input);
 
     this.applyGravity();
 
@@ -180,16 +180,20 @@ class Player extends Sprite {
     this.checkVerticalCollision();
     //console.log(this.checkVerticalCollision());
 
-    //Inputs
-    if(input.includes('ArrowRight')) {
+    //console.log(input);
 
+    //Inputs
+
+    if(input.includes('ArrowRight')){
+    // if(input === 'PRESS right') {
       this.playerState('RunningRight');
       this.velocity.x = this.speed;
       this.lastDirection = 'right';
       this.panCameraLeft();
 
     } else if(input.includes('ArrowLeft')) {
-
+            //if(input === 'PRESS left') {
+        //console.log('RUNNING LEFT')
         this.playerState('RunningLeft');
         this.velocity.x = -this.speed;
         this.lastDirection = 'left';
@@ -203,33 +207,34 @@ class Player extends Sprite {
 
     }
 
-    if(input.includes('ArrowUp')) {
-      this.updateHitbox();
+    if(input.includes('ArrowUp')){
+    //if(input === 'PRESS up')
+      //this.updateHitbox();
       //if(this.onGround())
       this.velocity.y -= this.bounce;
       this.panCameraDown();
     }
     //console.log(this.speed);
-    if(input.includes('s')) {
+    if(input.includes('s')){
+    //if(input === 'PRESS s')
       this.playerSpeedBoost();
+      //if(this.lastDirection === 'right') this.playerState('SpeedBoostRight');
+      //else if(this.lastDirection === 'left') this.playerState('SpeedBoostLeft');
     }
-    // if(input.includes('a')) {
-    //     this.playerState('Attack1');
-    //     this.playerAttack();
-    // }
+    if(input.includes('a')){
+    //if(input === 'PRESS a')
+        this.playerState('Attack1');
+        this.playerAttack();
+    }
     if(this.velocity.y < 0) {
       this.panCameraDown();
-      if(this.lastDirection === 'right') this.playerState('Jumping');
+      if(this.lastDirection === 'right') this.playerState('JumpingRight');
       else if(this.lastDirection === 'left') this.playerState('JumpingLeft');
     }
     else if(this.velocity.y > 0) {
-      if(this.lastDirection === 'right') this.playerState('Falling');
+      if(this.lastDirection === 'right') this.playerState('FallingRight');
       else if(this.lastDirection === 'left') this.playerState('FallingLeft');
       this.panCameraUp();
-    }
-
-    if(input.includes('')) {
-
     }
 
     //Horizontal Boundaries
@@ -237,6 +242,10 @@ class Player extends Sprite {
     // if(this.hitbox.position.x < 0) this.hitbox.position.x = 0;
     // if(this.hitbox.position.x > this.game.width - this.width) this.hitbox.position.x = this.game.width - this.width;
 
+  }
+
+  playerClasstest() {
+    console.log("This is the player class access test. WORKING!")
   }
 
   playerSpeedBoost() {
@@ -291,6 +300,17 @@ class Player extends Sprite {
   //   context.fillRect(this.position.x, this.position.y, this.width, this.height);
   //   // context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.position.x, this.position.y,
   //   // this.width, this.height);
+  // }
+  // draw(context, deltaTime) {
+  //     if(this.frameTimer > this.frameInterval) {
+  //         if(this.frameX < this.maxFrame) this.frameX++;
+  //         else this.frameX = 0;
+  //         this.frameTimer = 0;
+  //     } else {
+  //         this.frameTimer += deltaTime;
+  //     }
+  //     context.drawImage(this.image, this.width * this.frameX, this.height * this.frameY,
+  //     this.width, this.height, this.x, this.y, this.width, this.height);
   // }
 
   applyGravity() {
