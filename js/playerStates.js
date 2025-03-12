@@ -48,6 +48,10 @@ class StandingRight extends PlayerState {
     }
     handleInput(input) {
         //if(input === 'PRESS left') this.game.player.setPlayerState(playerStates.STANDING_LEFT); //Set state to StandingLeft
+        // if(input.includes('PRESS left')) this.game.player.setPlayerState(playerStates.RUNNING_LEFT);
+        // else if(input.includes('PRESS right')) this.game.player.setPlayerState(playerStates.RUNNING_RIGHT);
+        // else if(input.includes('PRESS down')) this.game.player.setPlayerState(playerStates.SITTING_RIGHT);
+        // else if(input.includes('PRESS up')) this.game.player.setPlayerState(playerStates.JUMPING_RIGHT);
         if(input === 'PRESS left') this.game.player.setPlayerState(playerStates.RUNNING_LEFT);
         else if(input === 'PRESS right') this.game.player.setPlayerState(playerStates.RUNNING_RIGHT);
         else if(input === "PRESS down") this.game.player.setPlayerState(playerStates.SITTING_RIGHT);
@@ -101,6 +105,9 @@ class RunningLeft extends PlayerState {
         // this.game.player.speed = -this.game.player.maxSpeed;
     }
     handleInput(input) {
+        // if(input.includes('PRESS right')) this.game.player.setPlayerState(playerStates.RUNNING_RIGHT); //Set state to RunningLeft
+        // else if(input.includes('RELEASE left')) this.game.player.setPlayerState(playerStates.STANDING_LEFT);
+        // else if(input.includes('PRESS down')) this.game.player.setPlayerState(playerStates.SITTING_LEFT);
         if(input === 'PRESS right') this.game.player.setPlayerState(playerStates.RUNNING_RIGHT); //Set state to RunningLeft
         else if(input === 'RELEASE left') this.game.player.setPlayerState(playerStates.STANDING_LEFT);
         else if(input === "PRESS down") this.game.player.setPlayerState(playerStates.SITTING_LEFT);
@@ -112,12 +119,20 @@ class RunningRight extends PlayerState {
         super('RUNNING RIGHT', game);
     }
     enter() {
+      this.game.player.playerClasstest()
       this.game.player.playerState('RunningRight');
+      this.game.player.velocity.x = this.game.player.speed;
+      this.game.player.lastDirection = 'right';
+      this.game.player.panCameraLeft();
         // this.player.maxFrame = 8;
         // this.player.frameY = 6;
         // this.player.speed = this.player.maxSpeed;
     }
     handleInput(input) {
+        // if(input.includes('PRESS left')) this.game.player.setPlayerState(playerStates.RUNNING_LEFT); //Set state to RunningLeft
+        // else if(input.includes('RELEASE left')) this.game.player.setPlayerState(playerStates.STANDING_RIGHT);
+        // else if(input.includes('PRESS down')) this.game.player.setPlayerState(playerStates.SITTING_RIGHT);
+
         if(input === 'PRESS left') this.game.player.setPlayerState(playerStates.RUNNING_LEFT); //Set state to RunningLeft
         else if(input === 'RELEASE right') this.game.player.setPlayerState(playerStates.STANDING_RIGHT);
         else if(input === "PRESS down") this.game.player.setPlayerState(playerStates.SITTING_RIGHT);
@@ -173,7 +188,10 @@ class FallingLeft extends PlayerState {
         //this.game.player = player;
     }
     enter() {
-      this.game.player.playerState('FallingLeft');
+
+      if(this.lastDirection === 'right') this.playerState('Falling');
+      else if(this.lastDirection === 'left') this.playerState('FallingLeft');
+      //this.game.player.playerState('FallingLeft');
         // this.game.player.maxFrame = 6;
         // this.game.player.frameY = 5;
         // //This allows player to move horizontally in the air
@@ -191,7 +209,9 @@ class FallingRight extends PlayerState {
         //this.game.player = player;
     }
     enter() {
-      this.game.player.playerState('FallingRight');
+      if(this.lastDirection === 'right') this.playerState('Falling');
+      else if(this.lastDirection === 'left') this.playerState('FallingLeft');
+      //this.game.player.playerState('FallingRight');
         // this.game.player.maxFrame = 6;
         // this.game.player.frameY = 4;
         // this.game.player.speed = this.game.player.maxSpeed * 0.5;

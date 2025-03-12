@@ -129,6 +129,16 @@ class GameControl {
               frameCount :2,
               frameBuffer: 3
             },
+            SpeedBoostRight: {
+              imgsrc: './assets/img/Run.png',
+              frameCount :4,
+              frameBuffer: 3
+            },
+            SpeedBoostLeft: {
+              imgsrc: './assets/img/RunLeft.png',
+              frameCount :4,
+              frameBuffer: 3
+            },
             Attack1: {
               imgsrc: './assets/img/Attack1.png',
               frameCount :4,
@@ -138,8 +148,8 @@ class GameControl {
           cameraPos: this.camera
         });
 
-        this.player.currentState = this.player.playerStates[0];
-        this.player.currentState.enter();
+        // this.player.currentState = this.player.playerStates[1];
+        // this.player.currentState.enter();
 
         this.lastTime = 0;
 
@@ -166,6 +176,7 @@ class GameControl {
 
     update(context, deltaTime) {
       //console.log(this.input.keys);
+      //console.log(this.player.currentState)
       context.save();
 
       context.scale(4, 4);
@@ -182,6 +193,7 @@ class GameControl {
       });
       this.player.checkHorizontalCanvasHitboxCollision();
       this.player.update(this.input.keys, context, deltaTime);
+      //this.player.update(this.input.lastKey, context, deltaTime);//Last Key input event
 
       //Enemy handler
       if(this.enemyTimer > this.enemyInterval) {
@@ -200,7 +212,7 @@ class GameControl {
 
     }
 
-    draw(context) {
+    draw(context, deltaTime) {
       //this.player.draw(context);//No longer Needed -> draw method is called within update method //Tight coupling--bad design
     }
 
@@ -213,6 +225,7 @@ class GameControl {
         this.update(context, deltaTime);//Update method must be called before draw method
         this.draw(context);
         if(!this.gameOver) requestAnimationFrame(animate);
+        //console.log(deltaTime);
       }
       animate(0);
     }
