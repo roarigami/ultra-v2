@@ -1,10 +1,11 @@
-class Enemy {
-    constructor() {
-      this.frameX = 0;
-      this.frameY = 0;
-      this.fps = 20;
-      this.frameInterval = 1000/this.fps;
-      this.frameTimer = 0;
+class Enemy extends Sprite {
+    constructor(imgsrc, frameCount, scale = 0.5) {
+      super({imgsrc, frameCount, scale})
+      // this.frameX = 0;
+      // this.frameY = 0;
+      // this.fps = 20;
+      // this.frameInterval = 1000/this.fps;
+      // this.frameTimer = 0;
       this.markedForDeletion = false;
     }
 
@@ -32,8 +33,8 @@ class Enemy {
 }
 
 class AerialEnemy extends Enemy {
-    constructor(game) {
-      super();
+    constructor({game}) {
+      super({imgsrc, frameCount, scale});
       this.game = game;
       this.width = 60;
       this.height = 44;

@@ -81,7 +81,10 @@ class GameControl {
         this.enemyInterval = 1000;
 
         this.collisions = [];
-
+        // this.enemy = new Enemy({
+        //   game: this,
+        //
+        // })
         this.player = new Player({
           game: this,
           collisionBlocks: this.collisionBlocks,
@@ -192,7 +195,7 @@ class GameControl {
       context.scale(4, 4);
       context.translate(camera.position.x, camera.position.y);//-this.background.image.height + this.scaledCanvas.height
 
-      this.background.update(context);
+      this.background.update(context, deltaTime);
       //this property must be between save and restore
       //to scale the collision blocks to the proper coordinates
       this.collisionBlocks.forEach((collBlock) => {
@@ -207,7 +210,7 @@ class GameControl {
 
       //Enemy handler
       if(this.enemyTimer > this.enemyInterval) {
-          this.addEnemy();
+          //this.addEnemy();
           this.enemyTimer = 0;
       } else {
           this.enemyTimer += deltaTime;
@@ -246,7 +249,11 @@ class GameControl {
         //if(this.speed > 0 && Math.random() < 0.5) this.enemies.push(new GroundEnemy(this));
         //else if(this.speed > 0) this.enemies.push(new ClimbingEnemy(this));
         //console.log(this.enemies);
-        this.enemies.push(new AerialEnemy(this));
+        this.enemies.push(
+          new AerialEnemy({
+
+          })
+        );
     }
 
     init() {
