@@ -14,6 +14,8 @@ class Player extends Sprite {
     this.maxBounce = 10;
 
     this.isAttacking;
+    this.isAttacking2;
+    this.isAttacking3;
 
     this.position = {
       x: -10,
@@ -53,6 +55,23 @@ class Player extends Sprite {
       width: 70,
       height: 5
     }
+    this.attackbox2 = {
+      position: {
+        x: this.hitbox.position.x,
+        y: this.hitbox.position.y
+      },
+      width: 48,
+      height: 20
+    }
+    this.attackbox3 = {
+      position: {
+        x: this.hitbox.position.x,
+        y: this.hitbox.position.y
+      },
+      width: 70,
+      height: 5
+    }
+
 
     this.camerabox = {
         position: {
@@ -159,10 +178,22 @@ class Player extends Sprite {
       context.fillStyle = 'rgba(15, 255, 0, 0.575)';
       context.fillRect(this.hitbox.position.x, this.hitbox.position.y, this.hitbox.width, this.hitbox.height);
 
-      //Attack box
+      //Attack1 box
       if(this.isAttacking == true) {
         context.fillStyle = 'rgba(255, 0, 0, 0.575)';
         context.fillRect(this.attackbox.position.x, this.attackbox.position.y, this.attackbox.width, this.attackbox.height);
+      }
+
+      //Attack3 box
+      if(this.isAttacking2 == true) {
+        context.fillStyle = 'rgba(255, 0, 0, 0.575)';
+        context.fillRect(this.attackbox2.position.x, this.attackbox2.position.y, this.attackbox2.width, this.attackbox2.height);
+      }
+
+      //Attack3 box
+      if(this.isAttacking3 == true) {
+        context.fillStyle = 'rgba(255, 0, 0, 0.575)';
+        context.fillRect(this.attackbox3.position.x, this.attackbox3.position.y, this.attackbox3.width, this.attackbox3.height);
       }
 
       //Camera box
@@ -190,12 +221,12 @@ class Player extends Sprite {
     } else if(input.includes('z')){
     //if(input === 'PRESS a')
         this.playerState('Attack2');
-        this.playerAttack();
+        this.playerAttackTwo();
 
     }  else if(input.includes('x')){
     //if(input === 'PRESS a')
         this.playerState('Attack3');
-        this.playerAttack();
+        this.playerAttackThree();
 
     } else if(input.includes('ArrowRight')){
     // if(input === 'PRESS right') {
@@ -270,6 +301,18 @@ class Player extends Sprite {
       this.isAttacking = false;
     }, 225);
   }
+  playerAttackTwo() {
+    this.isAttacking2 = true;
+    setTimeout(() => {
+      this.isAttacking2 = false;
+    }, 225);
+  }
+  playerAttackThree() {
+    this.isAttacking3 = true;
+    setTimeout(() => {
+      this.isAttacking3 = false;
+    }, 225);
+  }
 
   updateHitbox() {
     this.hitbox = {
@@ -290,6 +333,22 @@ class Player extends Sprite {
       },
       width: 45,
       height: 10
+    }
+    this.attackbox2 = {
+      position: {
+        x: this.hitbox.position.x - 25,
+        y: this.hitbox.position.y - 3
+      },
+      width: 73,
+      height: 30
+    }
+    this.attackbox3 = {
+      position: {
+        x: this.hitbox.position.x - 19,
+        y: this.hitbox.position.y - 25
+      },
+      width: 65,
+      height: 53
     }
   }
 
