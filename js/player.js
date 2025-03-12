@@ -160,10 +160,10 @@ class Player extends Sprite {
       context.fillRect(this.hitbox.position.x, this.hitbox.position.y, this.hitbox.width, this.hitbox.height);
 
       //Attack box
-      //if(this.isAttacking == true) {
+      if(this.isAttacking == true) {
         context.fillStyle = 'rgba(255, 0, 0, 0.575)';
         context.fillRect(this.attackbox.position.x, this.attackbox.position.y, this.attackbox.width, this.attackbox.height);
-      //}
+      }
 
       //Camera box
       context.fillStyle = 'rgba(0, 0, 255, 0.275)';
@@ -185,6 +185,16 @@ class Player extends Sprite {
     if(input.includes('a')){
     //if(input === 'PRESS a')
         this.playerState('Attack1');
+        this.playerAttack();
+
+    } else if(input.includes('z')){
+    //if(input === 'PRESS a')
+        this.playerState('Attack2');
+        this.playerAttack();
+
+    }  else if(input.includes('x')){
+    //if(input === 'PRESS a')
+        this.playerState('Attack3');
         this.playerAttack();
 
     } else if(input.includes('ArrowRight')){

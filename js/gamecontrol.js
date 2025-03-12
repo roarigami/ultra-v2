@@ -144,6 +144,16 @@ class GameControl {
               frameCount :4,
               frameBuffer: 4
             },
+            Attack2: {
+              imgsrc: './assets/img/Attack2.png',
+              frameCount :4,
+              frameBuffer: 4
+            },
+            Attack3: {
+              imgsrc: './assets/img/Attack3.png',
+              frameCount :4,
+              frameBuffer: 4
+            },
           },
           cameraPos: this.camera
         });
