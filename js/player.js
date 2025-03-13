@@ -165,6 +165,8 @@ class Player extends Sprite {
 
     //Sprite class method
     this.checkEnemyCollision();
+    this.checkAttackCollision();
+
     this.updateFrames();
     this.updateHitbox();
 
@@ -413,15 +415,78 @@ class Player extends Sprite {
       this.currentState.enter();
   }
 
+  checkEnemyCollision() {
+    this.game.enemies.forEach(enemy => {
+        if(enemy.x < this.hitbox.position.x + this.hitbox.width &&
+        enemy.x + enemy.width > this.hitbox.position.x &&
+        enemy.y < this.hitbox.position.y + this.hitbox.height &&
+        enemy.y + enemy.height > this.hitbox.position.y) {
+          //collision detected
+
+          console.log("Collided with enemy");
+
+          // enemy.markedForDeletion = true;
+          // this.game.enemyCollisions.push(new CollisionAnimation(this.game, enemy.x + enemy.width * 0.5,
+          //                                                  enemy.y + enemy.height * 0.5));
+
+          // if( this.currentState === this.playerStates[4] ||
+          //     this.currentState === this.playerStates[5]) {
+          //       this.game.score++;
+          // } else {
+          //     this.setState(6, 0);
+          //     this.game.lives--;
+
+              //Will set gameOver to true in Knockout Class
+              //if(this.game.lives <= 0) this.game.gameOver = true;
+              //if(this.game.lives <= 0) this.setState(8, 0);
+          //}
+
+        }
+
+    });
+  }
+
   checkAttackCollision() {
       this.game.enemies.forEach(enemy => {
-          if(this.attackbox.position.x + player.attackbox.width >= enemy.x &&
+          //If enemy hits attackbox
+          if(this.attackbox.position.x + this.attackbox.width >= enemy.x &&
              this.attackbox.position.x <= enemy.x + enemy.width &&
-             this.attackbox.position.y + player.attackbox.height >= enemy.y &&
+             this.attackbox.position.y + this.attackbox.height >= enemy.y &&
              this.attackbox.position.y <= enemy.y + enemy.height &&
              this.isAttacking) {
-               this.isAttacking = false;
+               console.log("Enemy has been hit by Attack 1!");
+
+               enemy.markedForDeletion = true;
+               this.game.enemyCollisions.push(new CollisionAnimation(this.game, enemy.x + enemy.width * 0.5,
+                                                                enemy.y + enemy.height * 0.5));
           }
+
+          if(this.attackbox2.position.x + this.attackbox2.width >= enemy.x &&
+             this.attackbox2.position.x <= enemy.x + enemy.width &&
+             this.attackbox2.position.y + this.attackbox2.height >= enemy.y &&
+             this.attackbox2.position.y <= enemy.y + enemy.height &&
+             this.isAttacking2) {
+               console.log("Enemy has been hit by Attack 2!");
+
+               enemy.markedForDeletion = true;
+               this.game.enemyCollisions.push(new CollisionAnimation(this.game, enemy.x + enemy.width * 0.5,
+                                                                enemy.y + enemy.height * 0.5));
+          }
+
+          if(this.attackbox3.position.x + this.attackbox3.width >= enemy.x &&
+             this.attackbox3.position.x <= enemy.x + enemy.width &&
+             this.attackbox3.position.y + this.attackbox3.height >= enemy.y &&
+             this.attackbox3.position.y <= enemy.y + enemy.height &&
+             this.isAttacking3) {
+               console.log("Enemy has been hit by Attack 3!");
+
+               enemy.markedForDeletion = true;
+               this.game.enemyCollisions.push(new CollisionAnimation(this.game, enemy.x + enemy.width * 0.5,
+                                                                enemy.y + enemy.height * 0.5));
+          }
+
+
+
       });
   }
 
@@ -528,37 +593,5 @@ class Player extends Sprite {
 
   }
 
-  checkEnemyCollision() {
-    this.game.enemies.forEach(enemy => {
-        if(enemy.x < this.hitbox.position.x + this.hitbox.width &&
-        enemy.x + enemy.width > this.hitbox.position.x &&
-        enemy.y < this.hitbox.position.y + this.hitbox.height &&
-        enemy.y + enemy.height > this.hitbox.position.y) {
-          //collision detected
-
-          console.log("Collided with enemy");
-
-          enemy.markedForDeletion = true;
-          this.game.enemyCollisions.push(new CollisionAnimation(this.game, enemy.x + enemy.width * 0.5,
-                                                           enemy.y + enemy.height * 0.5));
-
-          // if( this.currentState === this.playerStates[4] ||
-          //     this.currentState === this.playerStates[5]) {
-          //       this.game.score++;
-          // } else {
-          //     this.setState(6, 0);
-          //     this.game.lives--;
-
-              //Will set gameOver to true in Knockout Class
-              //if(this.game.lives <= 0) this.game.gameOver = true;
-              //if(this.game.lives <= 0) this.setState(8, 0);
-          //}
-
-        }
-        // else {
-        //   //no collision
-        // }
-    });
-  }
 
 }
