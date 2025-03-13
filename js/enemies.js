@@ -1,17 +1,46 @@
-class Enemy extends Sprite {
-    constructor(imgsrc, frameCount, scale = 0.5) {
-      super({imgsrc, frameCount, scale})
-      // this.frameX = 0;
-      // this.frameY = 0;
-      // this.fps = 20;
-      // this.frameInterval = 1000/this.fps;
-      // this.frameTimer = 0;
+// class Enemy extends Sprite {
+//     constructor(imgsrc, frameCount, scale = 0.5) {
+//       super({imgsrc, frameCount, scale})
+//       // this.frameX = 0;
+//       // this.frameY = 0;
+//       // this.fps = 20;
+//       // this.frameInterval = 1000/this.fps;
+//       // this.frameTimer = 0;
+//       this.markedForDeletion = false;
+//     }
+//
+//     update(deltaTime) {
+//         //Movement
+//         this.x -= this.speedX;
+//         this.y += this.speedY;
+//         //Sprite class method
+//         this.updateFrames();
+//
+//
+//         //Check if enemy has moved off screen
+//         if(this.x + this.width < 0 ) this.markedForDeletion = true;
+//     }
+//
+//     draw(context) {
+//       if(this.game.debug) context.strokeRect(this.x, this.y, this.width, this.height);
+//       context.drawImage(this.image, this.frameX * this.width, 0, this.width, this.height,
+//         this.x, this.y, this.width, this.height);
+//     }
+// }
+
+class Enemy {
+    constructor() {
+      this.frameX = 0;
+      this.frameY = 0;
+      this.fps = 20;
+      this.frameInterval = 1000/this.fps;
+      this.frameTimer = 0;
       this.markedForDeletion = false;
     }
 
     update(deltaTime) {
         //Movement
-        this.x -= this.speedX + this.game.speed;
+        this.x -= this.speedX;
         this.y += this.speedY;
         if(this.frameTimer > this.frameInterval) {
             this.frameTimer = 0;
@@ -26,15 +55,17 @@ class Enemy extends Sprite {
     }
 
     draw(context) {
-      if(this.game.debug) context.strokeRect(this.x, this.y, this.width, this.height);
+      if(this.game.debug) context.strokeRect(this.x, this.y, this.width * 0.3, this.height * 0.3);
       context.drawImage(this.image, this.frameX * this.width, 0, this.width, this.height,
-        this.x, this.y, this.width, this.height);
+        this.x, this.y, this.width * 0.3, this.height * 0.3);
     }
 }
 
 class AerialEnemy extends Enemy {
-    constructor({game, imgsrc, frameCount, frameBuffer}) {
-      super({imgsrc, frameCount, frameBuffer});
+    // constructor({game, imgsrc, frameCount, frameBuffer}) {
+    //   super({imgsrc, frameCount, frameBuffer});
+    constructor(game) {
+      super();
       this.game = game;
       this.width = 60;
       this.height = 44;
@@ -43,7 +74,7 @@ class AerialEnemy extends Enemy {
       this.speedX = Math.random() + 1;
       this.speedY = 0;
       this.maxFrame = 5;
-      //this.image = enemyAir;
+      this.image = enemyAir;
 
       //Wavy up and down movement
       this.angle = 0;
