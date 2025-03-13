@@ -80,7 +80,7 @@ class GameControl {
         this.enemyTimer = 0;
         this.enemyInterval = 1000;
 
-        this.collisions = [];
+        this.enemyCollisions = [];
         // this.enemy = new Enemy({
         //   game: this,
         //
@@ -221,6 +221,11 @@ class GameControl {
           enemy.draw(context);
       });
 
+      //Draw Collision Sprites
+      this.enemyCollisions.forEach(enemyCollision => {
+          enemyCollision.draw(context);
+      });
+
       //Enemy handler
       if(this.enemyTimer > this.enemyInterval) {
           this.addEnemy();
@@ -231,6 +236,12 @@ class GameControl {
       this.enemies.forEach(enemy => {
           enemy.update(deltaTime);
           if(enemy.markedForDeletion) this.enemies.splice(this.enemies.indexOf(enemy), 1);
+      });
+
+      //Handle Collision Sprites
+      this.enemyCollisions.forEach((enemyCollision, index) => {
+          enemyCollision.update(deltaTime);
+          if(enemyCollision.markedForDeletion) this.enemyCollisions.splice(index, 1);
       });
 
 

@@ -55,9 +55,9 @@ class Enemy {
     }
 
     draw(context) {
-      if(this.game.debug) context.strokeRect(this.x, this.y, this.width * 0.3, this.height * 0.3);
+      if(this.game.debug) context.strokeRect(this.x, this.y, this.width, this.height);
       context.drawImage(this.image, this.frameX * this.width, 0, this.width, this.height,
-        this.x, this.y, this.width * 0.3, this.height * 0.3);
+        this.x, this.y, this.width, this.height);
     }
 }
 
@@ -67,14 +67,18 @@ class AerialEnemy extends Enemy {
     constructor(game) {
       super();
       this.game = game;
-      this.width = 60;
-      this.height = 44;
+      this.scale = 0.25;
+      this.width = 60 * this.scale;
+      this.height = 44 * this.scale;
       this.x = this.game.width + Math.random() * this.game.width * 0.5;
       this.y = Math.random() * this.game.height * 0.5;
       this.speedX = Math.random() + 1;
       this.speedY = 0;
       this.maxFrame = 5;
       this.image = enemyAir;
+      //this.image.width = this.image.width * this.scale;
+      //this.image.height = this.image.height * this.scale;
+      //console.log(this.image.width);
 
       //Wavy up and down movement
       this.angle = 0;
