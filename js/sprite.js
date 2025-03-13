@@ -17,6 +17,7 @@ class Sprite {
         this.loaded = true;
     }
     this.image.src = imgsrc;
+    //console.log(this.image);
   }
 
   draw(context, deltaTime) {

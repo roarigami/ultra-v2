@@ -10,7 +10,7 @@ class Player extends Sprite {
     //this.height = 100 / 4;//height and width set in Sprite class
 
     this.gravity = 0.01;
-    this.bounce = 4;
+    this.bounce = 5;
     this.maxBounce = 10;
 
     this.isAttacking;

@@ -212,10 +212,13 @@ class GameControl {
       this.player.checkHorizontalCanvasHitboxCollision();
       this.player.update(this.input.keys, context, deltaTime);
       //this.player.update(this.input.lastKey, context, deltaTime);//Last Key input event
+      this.enemies.forEach(enemy => {
+          enemy.draw(context);
+      });
 
       //Enemy handler
       if(this.enemyTimer > this.enemyInterval) {
-          //this.addEnemy();
+          this.addEnemy();
           this.enemyTimer = 0;
       } else {
           this.enemyTimer += deltaTime;
@@ -253,15 +256,16 @@ class GameControl {
         //Otherwise they would just be accumulating off screen
         //if(this.speed > 0 && Math.random() < 0.5) this.enemies.push(new GroundEnemy(this));
         //else if(this.speed > 0) this.enemies.push(new ClimbingEnemy(this));
-        //console.log(this.enemies);
-        this.enemies.push(
-          new AerialEnemy({
-            game: this,
-            imgsrc: './assets/img/enemy_fly.png',
-            frameCount :6,
-            frameBuffer: 4
-          })
-        );
+        console.log(this.enemies);
+        this.enemies.push(new AerialEnemy(this));
+        // this.enemies.push(
+        //   new AerialEnemy({
+        //     game: this,
+        //     imgsrc: './assets/img/enemy_fly.png',
+        //     frameCount :6,
+        //     frameBuffer: 4
+        //   })
+        // );
     }
 
     init() {
