@@ -33,8 +33,8 @@ class Enemy extends Sprite {
 }
 
 class AerialEnemy extends Enemy {
-    constructor({game}) {
-      super({imgsrc, frameCount, scale});
+    constructor({game, imgsrc, frameCount, frameBuffer}) {
+      super({imgsrc, frameCount, frameBuffer});
       this.game = game;
       this.width = 60;
       this.height = 44;
@@ -43,7 +43,7 @@ class AerialEnemy extends Enemy {
       this.speedX = Math.random() + 1;
       this.speedY = 0;
       this.maxFrame = 5;
-      this.image = enemyAir;
+      //this.image = enemyAir;
 
       //Wavy up and down movement
       this.angle = 0;

@@ -147,6 +147,11 @@ class GameControl {
               frameCount :4,
               frameBuffer: 4
             },
+            Attack1Left: {
+              imgsrc: './assets/img/Attack1.png',
+              frameCount :4,
+              frameBuffer: 4
+            },
             Attack2: {
               imgsrc: './assets/img/Attack2.png',
               frameCount :4,
@@ -251,7 +256,10 @@ class GameControl {
         //console.log(this.enemies);
         this.enemies.push(
           new AerialEnemy({
-
+            game: this,
+            imgsrc: './assets/img/enemy_fly.png',
+            frameCount :6,
+            frameBuffer: 4
           })
         );
     }

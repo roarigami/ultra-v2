@@ -10,7 +10,7 @@ class Player extends Sprite {
     //this.height = 100 / 4;//height and width set in Sprite class
 
     this.gravity = 0.01;
-    this.bounce = 5;
+    this.bounce = 4;
     this.maxBounce = 10;
 
     this.isAttacking;
@@ -159,7 +159,11 @@ class Player extends Sprite {
 
   update(input, context, deltaTime) {
     //console.log(this.frameTimer)
+    //console.log(this.velocity.x)
     this.position.x += this.velocity.x * deltaTime;
+    this.hitbox.x += this.velocity.x * deltaTime;
+
+    //Sprite class method
     this.updateFrames();
     this.updateHitbox();
 
@@ -167,6 +171,7 @@ class Player extends Sprite {
     this.updateCamerabox();
 
     this.applyGravity(deltaTime);
+
 
     this.playerDraw(context, deltaTime);
     this.draw(context, deltaTime);
@@ -177,7 +182,7 @@ class Player extends Sprite {
     this.updateHitbox();//Hitbox must be right here //bad design
 
     //this.updateVerticalPosition(deltaTime);
-    this.checkVerticalCollision();
+    this.checkVerticalCollision(input);
     //console.log(this.checkVerticalCollision());
 
     //console.log(input);
@@ -416,7 +421,7 @@ class Player extends Sprite {
   }
 
   checkHorizontalCollision() {
-      const colissionBuffer = 0.0001;
+      const collisionBufferH = 0.0001;
       for(let i = 0; i < this.collisionBlocks.length; i++) {
           const collisionBlock = this.collisionBlocks[i];
 
@@ -433,7 +438,7 @@ class Player extends Sprite {
                     this.velocity.x = 0;
                     const offset = this.hitbox.position.x - this.position.x + this.hitbox.width;
 
-                    this.position.x = collisionBlock.position.x - offset - colissionBuffer;
+                    this.position.x = collisionBlock.position.x - offset - collisionBufferH;
                     break;
                 }
                 if(this.velocity.x < 0) {
@@ -441,15 +446,15 @@ class Player extends Sprite {
                     this.velocity.x = 0;
                     const offset = this.hitbox.position.x - this.position.x;
 
-                    this.position.x = collisionBlock.position.x + collisionBlock.width - offset + colissionBuffer;
+                    this.position.x = collisionBlock.position.x + collisionBlock.width - offset + collisionBufferH;
                     break;
                 }
           }
       }
   }
 
-  checkVerticalCollision() {
-    const colissionBuffer = 0.0001;
+  checkVerticalCollision(input) {
+    const collisionBufferV = 0.0001;
       for(let i = 0; i < this.collisionBlocks.length; i++) {
           const collisionBlock = this.collisionBlocks[i];
 
@@ -465,7 +470,7 @@ class Player extends Sprite {
                     this.velocity.y = 0;
                     const offset = this.hitbox.position.y - this.position.y + this.hitbox.height;
 
-                    this.position.y = collisionBlock.position.y - offset - colissionBuffer;
+                    this.position.y = collisionBlock.position.y - offset - collisionBufferV;
                     break;
                 }
                 //Cannot go through ceiling
@@ -474,7 +479,7 @@ class Player extends Sprite {
                     this.velocity.y = 0;
                     const offset = this.hitbox.position.y - this.position.y;
 
-                    this.position.y = collisionBlock.position.y + collisionBlock.height - offset + colissionBuffer;
+                    this.position.y = collisionBlock.position.y + collisionBlock.height - offset + collisionBufferV;
                     break;
                 }
           }
@@ -491,12 +496,12 @@ class Player extends Sprite {
             ) {
             //console.log("colliding with platform");
             //Cannot go through platform floor
-                if(this.velocity.y > 0) {
+                if(this.velocity.y > 0 && !input.includes('ArrowDown')) {
 
                     this.velocity.y = 0;
                     const offset = this.hitbox.position.y - this.position.y + this.hitbox.height;
 
-                    this.position.y = platformCollisionBlock.position.y - offset - colissionBuffer;
+                    this.position.y = platformCollisionBlock.position.y - offset - 0.0001;
                     break;
                 }
 
