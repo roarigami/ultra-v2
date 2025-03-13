@@ -41,8 +41,9 @@ class CollisionAnimation {
 
       //Check if player is rolling or diving to play attack collision sound
       //If player is in any other state play damage collision sound
-      if( this.game.player.currentState === this.game.player.playerStates[4] ||
-          this.game.player.currentState === this.game.player.playerStates[5]) {
+      if( this.game.player.isAttacking ||
+          this.game.player.isAttacking2 ||
+          this.game.player.isAttacking3) {
 
             //Only want to play sound once per animation
             if(this.frameX === 0) this.soundAttack.play();
