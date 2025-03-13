@@ -168,11 +168,11 @@ class Player extends Sprite {
     this.updateFrames();
     this.updateHitbox();
 
-
     this.updateAttackbox();
     this.updateCamerabox();
 
     this.applyGravity(deltaTime);
+    //this.updateHitbox();
 
 
     this.playerDraw(context, deltaTime);
@@ -401,7 +401,7 @@ class Player extends Sprite {
   applyGravity(deltaTime) {
     this.velocity.y += this.gravity * deltaTime;//This must be first
     this.position.y += this.velocity.y;
-    this.hitbox.y += this.velocity.y
+    this.hitbox.y += this.velocity.y;
   }
   onGround() {
       return this.velocity.y <= 0.2 && this.velocity.y >= 0;
@@ -428,11 +428,11 @@ class Player extends Sprite {
   checkHorizontalCollision() {
       const collisionBufferH = 0.0001;
       for(let i = 0; i < this.collisionBlocks.length; i++) {
-          const collisionBlock = this.collisionBlocks[i];
+          const collisionBlockH = this.collisionBlocks[i];
 
           if(xyCollision({
                 object1: this.hitbox,
-                object2: collisionBlock
+                object2: collisionBlockH
               })
             ) {
               //console.log("colliding with wall");
@@ -443,7 +443,7 @@ class Player extends Sprite {
                     this.velocity.x = 0;
                     const offset = this.hitbox.position.x - this.position.x + this.hitbox.width;
 
-                    this.position.x = collisionBlock.position.x - offset - collisionBufferH;
+                    this.position.x = collisionBlockH.position.x - offset - collisionBufferH;
                     break;
                 }
                 if(this.velocity.x < 0) {
@@ -451,7 +451,7 @@ class Player extends Sprite {
                     this.velocity.x = 0;
                     const offset = this.hitbox.position.x - this.position.x;
 
-                    this.position.x = collisionBlock.position.x + collisionBlock.width - offset + collisionBufferH;
+                    this.position.x = collisionBlockH.position.x + collisionBlockH.width - offset + collisionBufferH;
                     break;
                 }
           }
@@ -461,11 +461,11 @@ class Player extends Sprite {
   checkVerticalCollision(input) {
     const collisionBufferV = 0.0001;
       for(let i = 0; i < this.collisionBlocks.length; i++) {
-          const collisionBlock = this.collisionBlocks[i];
+          const collisionBlockH = this.collisionBlocks[i];
 
           if(xyCollision({
                 object1: this.hitbox,
-                object2: collisionBlock
+                object2: collisionBlockH
               })
             ) {
             //console.log("colliding with ground");
@@ -475,7 +475,7 @@ class Player extends Sprite {
                     this.velocity.y = 0;
                     const offset = this.hitbox.position.y - this.position.y + this.hitbox.height;
 
-                    this.position.y = collisionBlock.position.y - offset - collisionBufferV;
+                    this.position.y = collisionBlockH.position.y - offset - collisionBufferV;
                     break;
                 }
                 //Cannot go through ceiling
@@ -484,7 +484,7 @@ class Player extends Sprite {
                     this.velocity.y = 0;
                     const offset = this.hitbox.position.y - this.position.y;
 
-                    this.position.y = collisionBlock.position.y + collisionBlock.height - offset + collisionBufferV;
+                    this.position.y = collisionBlockH.position.y + collisionBlockH.height - offset + collisionBufferV;
                     break;
                 }
           }
@@ -530,14 +530,16 @@ class Player extends Sprite {
 
   checkEnemyCollision() {
     this.game.enemies.forEach(enemy => {
-        if(enemy.x < this.hitbox.x + this.hitbox.width &&
-        enemy.x + enemy.width > this.hitbox.x &&
-        enemy.y < this.hitbox.y + this.hitbox.height &&
-        enemy.y + enemy.height > this.hitbox.y) {
+        if(enemy.x < this.hitbox.position.x + this.hitbox.width &&
+        enemy.x + enemy.width > this.hitbox.position.x &&
+        enemy.y < this.hitbox.position.y + this.hitbox.height &&
+        enemy.y + enemy.height > this.hitbox.position.y) {
           //collision detected
 
+          console.log("Collided with enemy");
+
           enemy.markedForDeletion = true;
-          this.game.collisions.push(new CollisionAnimation(this.game, enemy.x + enemy.width * 0.5,
+          this.game.enemyCollisions.push(new CollisionAnimation(this.game, enemy.x + enemy.width * 0.5,
                                                            enemy.y + enemy.height * 0.5));
 
           // if( this.currentState === this.playerStates[4] ||
