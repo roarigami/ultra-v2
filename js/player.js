@@ -164,8 +164,10 @@ class Player extends Sprite {
     this.hitbox.x += this.velocity.x * deltaTime;
 
     //Sprite class method
+    this.checkEnemyCollision();
     this.updateFrames();
     this.updateHitbox();
+
 
     this.updateAttackbox();
     this.updateCamerabox();
@@ -265,6 +267,9 @@ class Player extends Sprite {
 
   playerClasstest() {
     console.log("This is the player class access test. WORKING!")
+  }
+  playerHit() {
+    this.playerState('TakeHit');
   }
 
   playerSpeedBoost() {
@@ -524,7 +529,34 @@ class Player extends Sprite {
   }
 
   checkEnemyCollision() {
+    this.game.enemies.forEach(enemy => {
+        if(enemy.x < this.hitbox.x + this.hitbox.width &&
+        enemy.x + enemy.width > this.hitbox.x &&
+        enemy.y < this.hitbox.y + this.hitbox.height &&
+        enemy.y + enemy.height > this.hitbox.y) {
+          //collision detected
 
+          enemy.markedForDeletion = true;
+          this.game.collisions.push(new CollisionAnimation(this.game, enemy.x + enemy.width * 0.5,
+                                                           enemy.y + enemy.height * 0.5));
+
+          // if( this.currentState === this.playerStates[4] ||
+          //     this.currentState === this.playerStates[5]) {
+          //       this.game.score++;
+          // } else {
+          //     this.setState(6, 0);
+          //     this.game.lives--;
+
+              //Will set gameOver to true in Knockout Class
+              //if(this.game.lives <= 0) this.game.gameOver = true;
+              //if(this.game.lives <= 0) this.setState(8, 0);
+          //}
+
+        }
+        // else {
+        //   //no collision
+        // }
+    });
   }
 
 }

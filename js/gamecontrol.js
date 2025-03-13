@@ -132,6 +132,11 @@ class GameControl {
               frameCount :2,
               frameBuffer: 3
             },
+            TakeHit: {
+              imgsrc: './assets/img/TakeHit.png',
+              frameCount :4,
+              frameBuffer: 4
+            },
             SpeedBoostRight: {
               imgsrc: './assets/img/Run.png',
               frameCount :4,
