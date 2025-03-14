@@ -228,6 +228,8 @@ class Player extends Sprite {
       else if(this.lastDirection === 'left') this.playerState('StandingLeft');
       this.velocity.x = 0;
 
+    } else {
+      this.velocity.x = 0;
     }
 
     if(input.includes('ArrowUp')){
@@ -389,6 +391,10 @@ class Player extends Sprite {
       this.velocity.y = -this.bounce;
     }
   }
+  playerHit() {
+    this.playerState('TakeHit');
+    //this.velocity.x = -4;
+  }
 
   updateHorizontalPosition(deltaTime) {
     this.position.x += this.velocity.x * deltaTime;
@@ -424,6 +430,9 @@ class Player extends Sprite {
           //collision detected
 
           console.log("Collided with enemy");
+          this.playerHit();
+
+          //if(this.game.lives <= 0) this.playerState('Death');
 
           // enemy.markedForDeletion = true;
           // this.game.enemyCollisions.push(new CollisionAnimation(this.game, enemy.x + enemy.width * 0.5,
