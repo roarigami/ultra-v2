@@ -273,7 +273,7 @@ class GameControl {
         //if(this.speed > 0 && Math.random() < 0.5) this.enemies.push(new GroundEnemy(this));
         //else if(this.speed > 0) this.enemies.push(new ClimbingEnemy(this));
         console.log(this.enemies);
-        this.enemies.push(new AerialEnemy(this));
+        this.enemies.push(new AerialEnemy(this, './assets/img/enemy_fly.png'));
         // this.enemies.push(
         //   new AerialEnemy({
         //     game: this,
