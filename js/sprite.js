@@ -11,7 +11,6 @@ class Sprite {
     // this.currentFrame = 0;
     // this.frameBuffer = frameBuffer;
     // this.elapsedFrames = 0;
-    //
     this.image.onload = () => {
         this.width = (this.image.width / this.frameCount) * this.scale;
         this.height = (this.image.height) * this.scale;
@@ -28,18 +27,13 @@ class Sprite {
   }
 
 
+
   update(context, deltaTime) {
 
-    //Sprite animation
-    if(this.frameTimer > this.frameInterval) {
-        this.frameTimer = 0;
-        if(this.frameX < this.maxFrame) this.frameX++;
-        else this.frameX = 0;
-    } else {
-        this.frameTimer += deltaTime;
-    }
+    //if(this.currentFrame < this.frameCount - 1) this.currentFrame++;
+    //else this.currentFrame = 0;
 
-    //Sprite animation
+    // //Sprite animation
     // if(this.frameTimer > this.frameInterval) {
     //     this.frameTimer = 0;
     //     if(this.frameX < this.maxFrame) this.frameX++;
@@ -47,6 +41,8 @@ class Sprite {
     // } else {
     //     this.frameTimer += deltaTime;
     // }
+    //console.log(this.maxFrame);
+    //console.log(this.currentFrame);
 
     //console.log(deltaTime)
     // this.draw(context);
@@ -73,12 +69,9 @@ class Sprite {
     //console.log(this.currentFrame);
     if(!this.image) return;
 
-    if(this.currentFrame < this.frameCount - 1) this.currentFrame++;
-    else this.currentFrame = 0;
-
     const cropbox = {
       position: {
-        x: this.currentFrame * (this.image.width / this.frameCount),
+        x: this.frameX * (this.image.width / this.frameCount),
         y: 0
       },
       width: this.image.width / this.frameCount,
@@ -94,6 +87,16 @@ class Sprite {
                       this.position.y,
                       this.width,
                       this.height);
+
+    // context.drawImage(this.image,
+    //                   this.frameX * this.width,
+    //                   this.frameY * this.height,
+    //                   this.width,
+    //                   this.height,
+    //                   this.x,
+    //                   this.y,
+    //                   this.width,
+    //                   this.height);
   }
 
   // updateFrames(deltaTime) {

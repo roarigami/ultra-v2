@@ -26,11 +26,11 @@ class Player extends Sprite {
       y: 0
     }
 
-    this.speedLevelOne = 0.15;
-    this.speedLevelTwo = 2.25;
-    this.speedLevelThree = 2,5;
-    this.speedLevelFour = 2.75;
-    this.speedLevelFive = 3;
+    this.speedLevelOne = 0.10;
+    this.speedLevelTwo = 0.20;
+    this.speedLevelThree = 0.30;
+    this.speedLevelFour = 0.40;
+    this.speedLevelFive = 0.5;
     this.speedBoostLevelOne = 1;
     this.speedBoostLevelTwo = 2;
     this.speedBoostLevelThree = 3;
@@ -149,21 +149,25 @@ class Player extends Sprite {
   }
 
   playerState(key) {
+    //console.log(key);
     //console.log(this.animations[key].image)
     //If last key is equal to arrowUp return
     if(this.image === this.animations[key].image || !this.loaded) return;
 
     this.currentFrame = 0;
+    //This is the key piece that changes the current image object into the input key image object
     this.image = this.animations[key].image;
     this.frameBuffer = this.animations[key].frameBuffer;
     this.maxFrame = this.animations[key].maxFrame;
     this.frameCount = this.animations[key].frameCount;
+
   }
 
   update(input, context, deltaTime) {
     //console.log(this.image)
     //console.log(this.currentState)
-    //this.currentState.handleInput(input);
+    this.currentState.handleInput(input);
+    //console.log(input);
 
     //console.log(this.frameTimer)
     //console.log(this.velocity.x)
@@ -243,6 +247,14 @@ class Player extends Sprite {
 
     } else {
       this.velocity.x = 0;
+      if(this.lastDirection === 'right') {
+        this.playerState('StandingRight');
+        this.setPlayerState(playerStates.STANDING_RIGHT, input);
+      }
+      else if(this.lastDirection === 'left') {
+        this.playerState('StandingLeft');
+        this.setPlayerState(playerStates.STANDING_LEFT, input);
+      }
     }
 
     if(input.includes('ArrowUp')){
@@ -260,10 +272,15 @@ class Player extends Sprite {
       //else if(this.lastDirection === 'left') this.playerState('SpeedBoostLeft');
     }
 
+
+
+
+
     if(this.velocity.y < 0) {
       this.panCameraDown();
       //if(input.includes('Attack1')) {
         if(this.lastDirection === 'right') this.playerState('JumpingRight');
+
         else if(this.lastDirection === 'left') this.playerState('JumpingLeft');
       //}
 
@@ -274,6 +291,20 @@ class Player extends Sprite {
       else if(this.lastDirection === 'left') this.playerState('FallingLeft');
       this.panCameraUp();
     }
+
+
+    //Sprite animation
+    if(this.frameTimer > this.frameInterval) {
+        this.frameTimer = 0;
+        if(this.frameX < this.maxFrame) this.frameX++;
+        else this.frameX = 0;
+    } else {
+        this.frameTimer += deltaTime;
+    }
+    //console.log(this.frameX)
+    //console.log(this.maxFrame);
+    //console.log(this.currentFrame);
+    //console.log(this.currentState)
 
     //Horizontal Boundaries
     // const offsetLeft = this.hitbox.position.x - this.position.x;
@@ -443,6 +474,7 @@ class Player extends Sprite {
 
       this.currentState = this.playerStates[playerState];
       this.currentState.enter();
+      //console.log(this.currentState);
   }
 
   checkEnemyCollision() {

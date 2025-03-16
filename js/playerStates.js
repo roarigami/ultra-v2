@@ -57,6 +57,7 @@ class StandingRight extends PlayerState {
         this.game.player.maxFrame = 7;
         this.game.player.frameCount = 8;
         this.game.player.playerState('StandingRight');
+        //console.log("STANDING RIGHT")
         //this.game.player.setPlayerState(playerStates.STANDING_RIGHT, 'StandingRight');
     }
     handleInput(input) {
