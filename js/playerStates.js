@@ -8,8 +8,13 @@ const playerStates = {
     RUNNING_RIGHT: 3,
     JUMPING_LEFT: 4,
     JUMPING_RIGHT: 5,
-    FALLING_LEFT: 6,
-    FALLING_RIGHT: 7
+    DOUBLE_JUMPING_LEFT: 6,
+    DOUBLE_JUMPING_RIGHT: 7,
+    FALLING_LEFT: 8,
+    FALLING_RIGHT: 9,
+    ATTACK_ONE: 10,
+    ATTACK_TWO: 11,
+    ATTACK_THREE: 12
 }
 
 class PlayerState {
@@ -25,14 +30,21 @@ class StandingLeft extends PlayerState {
         //this.game.player = player;
     }
     enter() {
+        this.game.player.maxFrame = 7;
+        this.game.player.frameCount = 8;
         this.game.player.playerState('StandingLeft');
     }
     handleInput(input) {
         //if(input === 'PRESS right') this.game.player.setPlayerState(playerStates.STANDING_RIGHT); //Set state to StandingRight
-        if(input === 'PRESS right') this.game.player.setPlayerState(playerStates.RUNNING_RIGHT);
-        else if(input === 'PRESS left') this.game.player.setPlayerState(playerStates.RUNNING_LEFT);
-        else if(input === "PRESS down") this.game.player.setPlayerState(playerStates.SITTING_LEFT);
-        else if(input === "PRESS up") this.game.player.setPlayerState(playerStates.JUMPING_LEFT);
+        if(input.includes('ArrowRight')) this.game.player.setPlayerState(playerStates.RUNNING_RIGHT);
+        else if(input.includes('ArrowLeft')) this.game.player.setPlayerState(playerStates.RUNNING_LEFT);
+        else if(input.includes('ArrowDown')) this.game.player.setPlayerState(playerStates.CROUCHING_LEFT);
+        else if(input.includes('ArrowUp')) this.game.player.setPlayerState(playerStates.JUMPING_LEFT);
+
+        // if(input === 'PRESS right') this.game.player.setPlayerState(playerStates.RUNNING_RIGHT);
+        // else if(input === 'PRESS left') this.game.player.setPlayerState(playerStates.RUNNING_LEFT);
+        // else if(input === "PRESS down") this.game.player.setPlayerState(playerStates.SITTING_LEFT);
+        // else if(input === "PRESS up") this.game.player.setPlayerState(playerStates.JUMPING_LEFT);
     }
 }
 
@@ -42,9 +54,10 @@ class StandingRight extends PlayerState {
         //this.game.player = player;
     }
     enter() {
-        this.game.player.maxFrame = 6;
-        this.game.player.speed = 0;
+        this.game.player.maxFrame = 7;
+        this.game.player.frameCount = 8;
         this.game.player.playerState('StandingRight');
+        //this.game.player.setPlayerState(playerStates.STANDING_RIGHT, 'StandingRight');
     }
     handleInput(input) {
         //if(input === 'PRESS left') this.game.player.setPlayerState(playerStates.STANDING_LEFT); //Set state to StandingLeft
@@ -52,10 +65,18 @@ class StandingRight extends PlayerState {
         // else if(input.includes('PRESS right')) this.game.player.setPlayerState(playerStates.RUNNING_RIGHT);
         // else if(input.includes('PRESS down')) this.game.player.setPlayerState(playerStates.SITTING_RIGHT);
         // else if(input.includes('PRESS up')) this.game.player.setPlayerState(playerStates.JUMPING_RIGHT);
-        if(input === 'PRESS left') this.game.player.setPlayerState(playerStates.RUNNING_LEFT);
-        else if(input === 'PRESS right') this.game.player.setPlayerState(playerStates.RUNNING_RIGHT);
-        else if(input === "PRESS down") this.game.player.setPlayerState(playerStates.SITTING_RIGHT);
-        else if(input === "PRESS up") this.game.player.setPlayerState(playerStates.JUMPING_RIGHT);
+        if(input.includes('a')) this.game.player.setPlayerState(playerStates.ATTACK_ONE);
+        else if(input.includes('z')) this.game.player.setPlayerState(playerStates.ATTACK_TWO);
+        else if(input.includes('x')) this.game.player.setPlayerState(playerStates.ATTACK_THREE);
+        else if(input.includes('ArrowLeft')) this.game.player.setPlayerState(playerStates.RUNNING_LEFT);
+        else if(input.includes('ArrowRight')) this.game.player.setPlayerState(playerStates.RUNNING_RIGHT);
+        else if(input.includes('ArrowDown')) this.game.player.setPlayerState(playerStates.CROUCHING_LEFT);
+        else if(input.includes('ArrowUp')) this.game.player.setPlayerState(playerStates.JUMPING_RIGHT);
+
+        // if(input === 'PRESS left') this.game.player.setPlayerState(playerStates.RUNNING_LEFT);
+        // else if(input === 'PRESS right') this.game.player.setPlayerState(playerStates.RUNNING_RIGHT);
+        // else if(input === "PRESS down") this.game.player.setPlayerState(playerStates.SITTING_RIGHT);
+        // else if(input === "PRESS up") this.game.player.setPlayerState(playerStates.JUMPING_RIGHT);
     }
 }
 
@@ -105,12 +126,13 @@ class RunningLeft extends PlayerState {
         // this.game.player.speed = -this.game.player.maxSpeed;
     }
     handleInput(input) {
-        // if(input.includes('PRESS right')) this.game.player.setPlayerState(playerStates.RUNNING_RIGHT); //Set state to RunningLeft
-        // else if(input.includes('RELEASE left')) this.game.player.setPlayerState(playerStates.STANDING_LEFT);
-        // else if(input.includes('PRESS down')) this.game.player.setPlayerState(playerStates.SITTING_LEFT);
-        if(input === 'PRESS right') this.game.player.setPlayerState(playerStates.RUNNING_RIGHT); //Set state to RunningLeft
-        else if(input === 'RELEASE left') this.game.player.setPlayerState(playerStates.STANDING_LEFT);
-        else if(input === "PRESS down") this.game.player.setPlayerState(playerStates.SITTING_LEFT);
+        if(input.includes('ArrowRight')) this.game.player.setPlayerState(playerStates.RUNNING_RIGHT); //Set state to RunningLeft
+        else if(input.includes('ArrowLeft')) this.game.player.setPlayerState(playerStates.RUNNING_LEFT);
+        else if(input.includes('ArrowDown')) this.game.player.setPlayerState(playerStates.CROUCHINGLEFT);
+
+        // if(input === 'PRESS right') this.game.player.setPlayerState(playerStates.RUNNING_RIGHT); //Set state to RunningLeft
+        // else if(input === 'RELEASE left') this.game.player.setPlayerState(playerStates.STANDING_LEFT);
+        // else if(input === "PRESS down") this.game.player.setPlayerState(playerStates.SITTING_LEFT);
     }
 }
 
@@ -119,7 +141,7 @@ class RunningRight extends PlayerState {
         super('RUNNING RIGHT', game);
     }
     enter() {
-      this.game.player.playerClasstest()
+      //this.game.player.playerClasstest()
       this.game.player.playerState('RunningRight');
       this.game.player.velocity.x = this.game.player.speed;
       this.game.player.lastDirection = 'right';
@@ -156,8 +178,8 @@ class JumpingLeft extends PlayerState {
         // this.game.player.speed = -this.game.player.maxSpeed * 0.5;
     }
     handleInput(input) {
-        if(input === 'PRESS right') this.game.player.setPlayerState(playerStates.JUMPING_RIGHT); //Set state to JumpingRight
-        else if(this.game.player.onGround()) this.game.player.setPlayerState(playerStates.STANDING_LEFT);
+        if(input.includes('ArrowUp')) this.game.player.setPlayerState(playerStates.DOUBLE_JUMPING_LEFT);
+        //else if(this.game.player.onGround()) this.game.player.setPlayerState(playerStates.STANDING_LEFT);
         else if(this.game.player.vy > 0) this.game.player.setPlayerState(playerStates.FALLING_LEFT);
     }
 }
@@ -175,10 +197,40 @@ class JumpingRight extends PlayerState {
         // this.game.player.speed = this.game.player.maxSpeed * 0.5;
     }
     handleInput(input) {
-        if(input === 'PRESS left') this.game.player.setPlayerState(playerStates.JUMPING_LEFT); //Set state to JumpingLeft
-        else if(this.game.player.onGround()) this.game.player.setPlayerState(playerStates.STANDING_RIGHT);
+        if(input.includes('ArrowUp')) this.game.player.setPlayerState(playerStates.DOUBLE_JUMPING_RIGHT);
+        //else if(this.game.player.onGround()) this.game.player.setPlayerState(playerStates.STANDING_RIGHT);
         else if(this.game.player.vy > 0) this.game.player.setPlayerState(playerStates.FALLING_RIGHT);
     }
+}
+class DoubleJumpingRight extends PlayerState {
+  constructor(game) {
+      super('DOUBLE JUMPING RIGHT', game);
+      //this.game.player = player;
+  }
+  enter() {
+    this.game.player.playerState('DoubleJumpingRight');
+  }
+  handleInput(input) {
+      if(input.includes('ArrowLeft')) this.game.player.setPlayerState(playerStates.DOUBLE_JUMPING_LEFT); //Set state to JumpingLeft
+      else if(this.game.player.onGround()) this.game.player.setPlayerState(playerStates.STANDING_RIGHT);
+      else if(this.game.player.vy > 0) this.game.player.setPlayerState(playerStates.FALLING_RIGHT);
+  }
+
+}
+class DoubleJumpingLeft extends PlayerState {
+  constructor(game) {
+      super('DOUBLE JUMPING LEFT', game);
+      //this.game.player = player;
+  }
+  enter() {
+    this.game.player.playerState('DoubleJumpingLeft');
+  }
+  handleInput(input) {
+      if(input.includes('Arrowright')) this.game.player.setPlayerState(playerStates.DOUBLE_JUMPING_RIGHT); //Set state to JumpingLeft
+      else if(this.game.player.onGround()) this.game.player.setPlayerState(playerStates.STANDING_RIGHT);
+      else if(this.game.player.vy > 0) this.game.player.setPlayerState(playerStates.FALLING_RIGHT);
+  }
+
 }
 
 
@@ -198,7 +250,7 @@ class FallingLeft extends PlayerState {
         // this.game.player.speed = -this.game.player.maxSpeed * 0.5;
     }
     handleInput(input) {
-        if(input === 'PRESS right') this.game.player.setPlayerState(playerStates.FALLING_RIGHT); //Set state to FallingRight
+        if(input.includes('ArrowRight')) this.game.player.setPlayerState(playerStates.FALLING_RIGHT); //Set state to FallingRight
         else if(this.game.player.onGround()) this.game.player.setPlayerState(playerStates.STANDING_LEFT);
     }
 }
@@ -217,7 +269,64 @@ class FallingRight extends PlayerState {
         // this.game.player.speed = this.game.player.maxSpeed * 0.5;
     }
     handleInput(input) {
-        if(input === 'PRESS left') this.game.player.setPlayerState(playerStates.JUMPING_LEFT); //Set state to JumpingRight
+        if(input.includes('ArrowLeft')) this.game.player.setPlayerState(playerStates.JUMPING_LEFT); //Set state to JumpingRight
+        else if(this.game.player.onGround()) this.game.player.setPlayerState(playerStates.STANDING_RIGHT);
+    }
+}
+
+
+
+//PLAYER ATTACK STATES
+class AttackOne extends PlayerState {
+    constructor(game) {
+        super('ATTACK ONE', game);
+        //this.game.player = player;
+    }
+    enter() {
+      this.game.player.playerState('Attack1');
+      this.game.player.maxFrame = 3;
+      this.game.player.frameY = 0;
+      this.game.player.frameCount = 3;
+    }
+    handleInput(input) {
+        if(input.includes('ArrowLeft')) this.game.player.setPlayerState(playerStates.JUMPING_LEFT); //Set state to JumpingRight
+        else if(this.game.player.onGround()) this.game.player.setPlayerState(playerStates.STANDING_RIGHT);
+    }
+}
+
+
+
+class AttackTwo extends PlayerState {
+    constructor(game) {
+        super('ATTACK TWO', game);
+        //this.game.player = player;
+    }
+    enter() {
+      this.game.player.playerState('Attack2');
+      this.game.player.maxFrame = 3;
+      this.game.player.frameY = 0;
+      this.game.player.frameCount = 3;
+    }
+    handleInput(input) {
+        if(input.includes('ArrowLeft')) this.game.player.setPlayerState(playerStates.JUMPING_LEFT); //Set state to JumpingRight
+        else if(this.game.player.onGround()) this.game.player.setPlayerState(playerStates.STANDING_RIGHT);
+    }
+}
+
+
+class AttackThree extends PlayerState {
+    constructor(game) {
+        super('ATTACK THREE', game);
+        //this.game.player = player;
+    }
+    enter() {
+        this.game.player.playerState('Attack3');
+        this.game.player.maxFrame = 3;
+        this.game.player.frameY = 0;
+        this.game.player.frameCount = 3;
+    }
+    handleInput(input) {
+        if(input.includes('ArrowLeft')) this.game.player.setPlayerState(playerStates.JUMPING_LEFT); //Set state to JumpingRight
         else if(this.game.player.onGround()) this.game.player.setPlayerState(playerStates.STANDING_RIGHT);
     }
 }

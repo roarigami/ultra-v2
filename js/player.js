@@ -1,7 +1,7 @@
 
 class Player extends Sprite {
-  constructor({game, collisionBlocks, platformCollisionBlocks, imgsrc, frameCount, scale = 0.5, animations, cameraPos}) {
-    super({imgsrc, frameCount, scale});
+  constructor({game, collisionBlocks, platformCollisionBlocks, imgsrc, frameY, frameCount, scale = 0.5, animations, cameraPos}) {
+    super({imgsrc, frameY, frameCount, scale});
     this.game = game;
     this.collisionBlocks = collisionBlocks;
     this.platformCollisionBlocks = platformCollisionBlocks;
@@ -95,7 +95,9 @@ class Player extends Sprite {
                          //new CrouchingLeft(this.game), new CrouchingRight(this.game),
                          new RunningLeft(this.game), new RunningRight(this.game),
                          new JumpingLeft(this.game), new JumpingRight(this.game),
-                         new FallingLeft(this.game), new FallingRight(this.game)];
+                         new DoubleJumpingLeft(this.game), new DoubleJumpingRight(this.game),
+                         new FallingLeft(this.game), new FallingRight(this.game),
+                         new AttackOne(this.game), new AttackTwo(this.game), new AttackThree(this.game)];
     this.currentState = this.playerStates[1];
 
 
@@ -147,17 +149,22 @@ class Player extends Sprite {
   }
 
   playerState(key) {
-    //console.log(key)
+    //console.log(this.animations[key].image)
     //If last key is equal to arrowUp return
     if(this.image === this.animations[key].image || !this.loaded) return;
 
     this.currentFrame = 0;
     this.image = this.animations[key].image;
     this.frameBuffer = this.animations[key].frameBuffer;
+    this.maxFrame = this.animations[key].maxFrame;
     this.frameCount = this.animations[key].frameCount;
   }
 
   update(input, context, deltaTime) {
+    //console.log(this.image)
+    //console.log(this.currentState)
+    //this.currentState.handleInput(input);
+
     //console.log(this.frameTimer)
     //console.log(this.velocity.x)
     this.position.x += this.velocity.x * deltaTime;
@@ -167,7 +174,7 @@ class Player extends Sprite {
     this.checkEnemyCollision();
     this.checkAttackCollision();
 
-    this.updateFrames();
+    //this.updateFrames();
     this.updateHitbox();
 
     this.updateAttackbox();
@@ -222,11 +229,17 @@ class Player extends Sprite {
         this.lastDirection = 'left';
         this.panCameraRight(deltaTime);
 
-    } else if(this.velocity.y === 0) {
+    } else if(this.velocity.y === 0 & this.velocity.x === 0) {
 
-      if(this.lastDirection === 'right') this.playerState('StandingRight');
-      else if(this.lastDirection === 'left') this.playerState('StandingLeft');
-      this.velocity.x = 0;
+          if(this.lastDirection === 'right') {
+            this.playerState('StandingRight');
+            this.setPlayerState(playerStates.STANDING_RIGHT, input);
+          }
+          else if(this.lastDirection === 'left') {
+            this.playerState('StandingLeft');
+            this.setPlayerState(playerStates.STANDING_LEFT, input);
+          }
+          this.velocity.x = 0;
 
     } else {
       this.velocity.x = 0;
@@ -362,6 +375,10 @@ class Player extends Sprite {
       context.fillStyle = 'rgba(15, 255, 0, 0.575)';
       context.fillRect(this.hitbox.position.x, this.hitbox.position.y, this.hitbox.width, this.hitbox.height);
 
+      //Camera box
+      context.fillStyle = 'rgba(0, 0, 255, 0.275)';
+      context.fillRect(this.camerabox.position.x, this.camerabox.position.y, this.camerabox.width, this.camerabox.height);
+
       //Attack1 box
       if(this.isAttacking == true) {
         context.fillStyle = 'rgba(255, 0, 0, 0.575)';
@@ -380,15 +397,17 @@ class Player extends Sprite {
         context.fillRect(this.attackbox3.position.x, this.attackbox3.position.y, this.attackbox3.width, this.attackbox3.height);
       }
 
-      //Camera box
-      context.fillStyle = 'rgba(0, 0, 255, 0.275)';
-      context.fillRect(this.camerabox.position.x, this.camerabox.position.y, this.camerabox.width, this.camerabox.height);
     }
   }
 
   playerJump() {
     if(this.velocity.y === 0) {
       this.velocity.y = -this.bounce;
+    }
+  }
+  playerDoubleJump() {
+    if(this.velocity != 0) {
+      this.playerJump();
     }
   }
   playerHit() {
@@ -415,8 +434,13 @@ class Player extends Sprite {
       return this.velocity.y <= 0.2 && this.velocity.y >= 0;
   }
 
-  setPlayerState(playerState) {
+  setPlayerState(playerState, key) {
       //Make sure all methods that are using setPlayerState are passing all expected arguments otherwise it won't work
+      // console.log(key)
+      // if(key = []) key = "StandingRight";
+      // else this.maxFrame = this.animations[key].maxFrame;
+      // this.frameCount = this.animations[key].frameCount;
+
       this.currentState = this.playerStates[playerState];
       this.currentState.enter();
   }
@@ -463,7 +487,7 @@ class Player extends Sprite {
              this.attackbox.position.y + this.attackbox.height >= enemy.y &&
              this.attackbox.position.y <= enemy.y + enemy.height &&
              this.isAttacking) {
-               console.log("Enemy has been hit by Attack 1!");
+               console.log("Enemy has been hit by Attack 11111!");
 
                enemy.markedForDeletion = true;
                this.game.enemyCollisions.push(new CollisionAnimation(this.game, enemy.x + enemy.width * 0.5,
@@ -475,7 +499,7 @@ class Player extends Sprite {
              this.attackbox2.position.y + this.attackbox2.height >= enemy.y &&
              this.attackbox2.position.y <= enemy.y + enemy.height &&
              this.isAttacking2) {
-               console.log("Enemy has been hit by Attack 2!");
+               console.log("Enemy has been hit by Attack 22222!");
 
                enemy.markedForDeletion = true;
                this.game.enemyCollisions.push(new CollisionAnimation(this.game, enemy.x + enemy.width * 0.5,
@@ -487,7 +511,7 @@ class Player extends Sprite {
              this.attackbox3.position.y + this.attackbox3.height >= enemy.y &&
              this.attackbox3.position.y <= enemy.y + enemy.height &&
              this.isAttacking3) {
-               console.log("Enemy has been hit by Attack 3!");
+               console.log("Enemy has been hit by Attack 33333!");
 
                enemy.markedForDeletion = true;
                this.game.enemyCollisions.push(new CollisionAnimation(this.game, enemy.x + enemy.width * 0.5,
@@ -552,6 +576,7 @@ class Player extends Sprite {
                     this.position.y = collisionBlockH.position.y - offset - collisionBufferV;
                     break;
                 }
+
                 //Cannot go through ceiling
                 if(this.velocity.y < 0) {
 
@@ -581,8 +606,10 @@ class Player extends Sprite {
                     const offset = this.hitbox.position.y - this.position.y + this.hitbox.height;
 
                     this.position.y = platformCollisionBlock.position.y - offset - 0.0001;
+
                     break;
                 }
+
 
                 //Can/Cannot go through platform bottom
                 // if(this.velocity.y < 0) {
