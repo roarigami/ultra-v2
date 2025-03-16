@@ -65,7 +65,7 @@ class Enemy {
                         this.x,
                         this.y,
                         this.width,
-                        this.iwidth);
+                        this.width);
     }
 }
 
@@ -78,8 +78,8 @@ class AerialEnemy extends Enemy {
       this.scale = 0.25;
       this.loaded = true;
 
-      this.width = 15;
-      this.height = 11;
+      this.width = 60 * this.scale;
+      this.height = 44 * this.scale;
       this.x = this.game.width + Math.random() * this.game.width * 0.5;
       this.y = Math.random() * this.game.height * 0.5;
       this.speedX = Math.random() + 1;
@@ -93,7 +93,7 @@ class AerialEnemy extends Enemy {
           this.image.width = (this.image.width / this.frameCount) * this.scale;
           this.image.height =  (this.image.height) * this.scale;
           this.loaded = true;
-          console.log(this.image.width);
+          //console.log(this.image.width);
       }
       this.image.src = imgsrc;
 

@@ -90,65 +90,91 @@ class GameControl {
           collisionBlocks: this.collisionBlocks,
           platformCollisionBlocks: this.platformCollisionBlocks,
           imgsrc: './assets/img/Idle.png',
+          frameY: 0,
+          maxFrame: 7,
           frameCount :8,
           animations: {
             StandingRight: {
               imgsrc: './assets/img/Idle.png',
+              maxFrame :7,
               frameCount :8,
               frameBuffer: 4
             },
             StandingLeft: {
               imgsrc: './assets/img/IdleLeft.png',
+              maxFrame :7,
               frameCount :8,
               frameBuffer: 4
             },
             RunningRight: {
               imgsrc: './assets/img/Run.png',
+              maxFrame :7,
               frameCount :8,
               frameBuffer: 3
             },
             RunningLeft: {
               imgsrc: './assets/img/RunLeft.png',
+              maxFrame :7,
               frameCount :8,
               frameBuffer: 3
             },
             JumpingRight: {
               imgsrc: './assets/img/Jump.png',
+              maxFrame :1,
               frameCount :2,
               frameBuffer: 3
             },
             JumpingLeft: {
               imgsrc: './assets/img/JumpLeft.png',
+              maxFrame :1,
+              frameCount :2,
+              frameBuffer: 3
+            },
+            DoubleJumpingRight: {
+              imgsrc: './assets/img/Jump.png',
+              maxFrame :1,
+              frameCount :2,
+              frameBuffer: 3
+            },
+            DoubleJumpingLeft: {
+              imgsrc: './assets/img/JumpLeft.png',
+              maxFrame :1,
               frameCount :2,
               frameBuffer: 3
             },
             FallingRight: {
               imgsrc: './assets/img/Fall.png',
+              maxFrame :1,
               frameCount :2,
               frameBuffer: 3
             },
             FallingLeft: {
               imgsrc: './assets/img/FallLeft.png',
+              maxFrame :1,
               frameCount :2,
               frameBuffer: 3
             },
             TakeHit: {
               imgsrc: './assets/img/TakeHit.png',
+              maxFrame :3,
               frameCount :4,
               frameBuffer: 4
             },
             SpeedBoostRight: {
               imgsrc: './assets/img/Run.png',
-              frameCount :4,
+              maxFrame: 4,
+              frameCount :5,
               frameBuffer: 3
             },
             SpeedBoostLeft: {
               imgsrc: './assets/img/RunLeft.png',
-              frameCount :4,
+              maxFrame: 4,
+              frameCount :5,
               frameBuffer: 3
             },
             Attack1: {
               imgsrc: './assets/img/Attack1.png',
+              maxFrame :3,
               frameCount :4,
               frameBuffer: 4
             },
@@ -182,7 +208,10 @@ class GameControl {
             y: 0
           },
           imgsrc: './assets/img/background.png',
+          frameY: 0,
+          maxFrame: 0,
           frameCount: 1
+
         })
 
         //Made camera global for now
@@ -272,7 +301,7 @@ class GameControl {
         //Otherwise they would just be accumulating off screen
         //if(this.speed > 0 && Math.random() < 0.5) this.enemies.push(new GroundEnemy(this));
         //else if(this.speed > 0) this.enemies.push(new ClimbingEnemy(this));
-        console.log(this.enemies);
+        //console.log(this.enemies);
         this.enemies.push(new AerialEnemy(this, './assets/img/enemy_fly.png'));
         // this.enemies.push(
         //   new AerialEnemy({
